@@ -4,15 +4,15 @@
     http://pear.php.net/dtd/package-2.0
     http://pear.php.net/dtd/package-2.0.xsd">
   <name>CommandLineLib</name>
-  <channel>pear.gradwell.com</channel>
+  <channel>pear.phix-project.org</channel>
   <summary>A simple-to-use command line parser</summary>
   <description>
     CommandLineLib is a simple-to-use PHP component that provides a high-quality command line parser via a fluid interface.
   </description>
   <lead>
     <name>Stuart Herbert</name>
-    <user>stuartherbert</user>
-    <email>stuart.herbert@gradwell.com</email>
+    <user>stuart</user>
+    <email>stuart@stuartherbert.com</email>
     <active>yes</active>
   </lead>
   <date>${build.date}</date>
@@ -37,20 +37,20 @@ ${contents}
   <dependencies>
     <required>
       <php>
-        <min>5.2.0</min>
+        <min>5.3.0</min>
       </php>
       <pearinstaller>
         <min>1.6.0</min>
       </pearinstaller>
       <package>
         <name>Autoloader</name>
-        <channel>pear.gradwell.com</channel>
+        <channel>pear.phix-project.org</channel>
         <min>2.0.0</min>
 	<max>2.999.9999</max>
       </package>
       <package>
         <name>ValidationLib</name>
-        <channel>pear.gradwell.com</channel>
+        <channel>pear.phix-project.org</channel>
         <min>1.0.0</min>
         <max>1.999.9999</max>
       </package>
