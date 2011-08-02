@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * Copyright (c) 2011 Stuart Herbert.
  * Copyright (c) 2010 Gradwell dot com Ltd.
  * All rights reserved.
  *
@@ -16,7 +17,7 @@
  *     the documentation and/or other materials provided with the
  *     distribution.
  *
- *   * Neither the name of Gradwell dot com Ltd nor the names of his
+ *   * Neither the names of the copyright holders nor the names of his
  *     contributors may be used to endorse or promote products derived
  *     from this software without specific prior written permission.
  *
@@ -33,20 +34,21 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package     Gradwell
+ * @package     Phix
  * @subpackage  CommandLineLib
- * @author      Stuart Herbert <stuart.herbert@gradwell.com>
+ * @author      Stuart Herbert <stuart@stuartherbert.com>
+ * @copyright   2011 Stuart Herbert. www.stuartherbert.com
  * @copyright   2010 Gradwell dot com Ltd. www.gradwell.com
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @link        http://gradwell.github.com
+ * @link        http://www.phix-project.org
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Gradwell\CommandLineLib;
+namespace Phix\CommandLineLib;
 
-use Gradwell\ValidationLib\MustBeValidFile;
-use Gradwell\ValidationLib\MustBeValidPath;
-use Gradwell\ValidationLib\MustBeWriteable;
+use Phix\ValidationLib\MustBeValidFile;
+use Phix\ValidationLib\MustBeValidPath;
+use Phix\ValidationLib\MustBeWriteable;
 
 class DefinedArgTest extends \PHPUnit_Framework_TestCase
 {
@@ -106,7 +108,7 @@ class DefinedArgTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($name, $obj->name);
                 $this->assertEquals($desc, $obj->desc);
                 $this->assertTrue($obj->testIsOptional());
-                $this->assertTrue($obj->testMustValidateWith('Gradwell\ValidationLib\MustBeValidFile'));
+                $this->assertTrue($obj->testMustValidateWith('Phix\ValidationLib\MustBeValidFile'));
         }
 
         public function testCanRequireAValidPath()
@@ -121,7 +123,7 @@ class DefinedArgTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($name, $obj->name);
                 $this->assertEquals($desc, $obj->desc);
                 $this->assertTrue($obj->testIsOptional());
-                $this->assertTrue($obj->testMustValidateWith('Gradwell\ValidationLib\MustBeValidPath'));
+                $this->assertTrue($obj->testMustValidateWith('Phix\ValidationLib\MustBeValidPath'));
         }
 
         public function testCanRequireWriteableArg()
@@ -136,7 +138,7 @@ class DefinedArgTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($name, $obj->name);
                 $this->assertEquals($desc, $obj->desc);
                 $this->assertTrue($obj->testIsOptional());
-                $this->assertTrue($obj->testMustValidateWith('Gradwell\ValidationLib\MustBeWriteable'));
+                $this->assertTrue($obj->testMustValidateWith('Phix\ValidationLib\MustBeWriteable'));
         }
 
         public function testCanSetDefaultValueForArg()
@@ -165,8 +167,8 @@ class DefinedArgTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($name, $obj->name);
                 $this->assertEquals($desc, $obj->desc);
                 $this->assertTrue($obj->testIsOptional());
-                $this->assertTrue($obj->testMustValidateWith('Gradwell\ValidationLib\MustBeWriteable'));
-                $this->assertFalse($obj->testMustValidateWith('Gradwell\ValidationLib\MustBeValidFile'));
+                $this->assertTrue($obj->testMustValidateWith('Phix\ValidationLib\MustBeWriteable'));
+                $this->assertFalse($obj->testMustValidateWith('Phix\ValidationLib\MustBeValidFile'));
         }
         
         public function testAnExceptionIsNotThrownIfValidatorClassDoesNotExist()
@@ -181,7 +183,7 @@ class DefinedArgTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($name, $obj->name);
                 $this->assertEquals($desc, $obj->desc);
                 $this->assertTrue($obj->testIsOptional());
-                $this->assertFalse($obj->testMustValidateWith('Gradwell\ValidationLib\MustNotBeWriteable'));
+                $this->assertFalse($obj->testMustValidateWith('Phix\ValidationLib\MustNotBeWriteable'));
         }
 
         public function testCanValidateAnArgsValue()
@@ -195,7 +197,7 @@ class DefinedArgTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($name, $obj->name);
                 $this->assertEquals($desc, $obj->desc);
                 $this->assertTrue($obj->testIsOptional());
-                $this->assertTrue($obj->testMustValidateWith('Gradwell\ValidationLib\MustBeValidFile'));
+                $this->assertTrue($obj->testMustValidateWith('Phix\ValidationLib\MustBeValidFile'));
 
                 // now, validate the data
                 $return = $obj->testIsValid(__FILE__);
@@ -214,7 +216,7 @@ class DefinedArgTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($name, $obj->name);
                 $this->assertEquals($desc, $obj->desc);
                 $this->assertTrue($obj->testIsOptional());
-                $this->assertTrue($obj->testMustValidateWith('Gradwell\ValidationLib\MustBeValidPath'));
+                $this->assertTrue($obj->testMustValidateWith('Phix\ValidationLib\MustBeValidPath'));
 
                 // now, validate the data
                 $return = $obj->testIsValid(__FILE__);
