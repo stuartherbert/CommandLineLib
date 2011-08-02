@@ -34,7 +34,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package     Phix
+ * @package     Phix_Project
  * @subpackage  CommandLineLib
  * @author      Stuart Herbert <stuart@stuartherbert.com>
  * @copyright   2011 Stuart Herbert. www.stuartherbert.com
@@ -44,11 +44,11 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix\CommandLineLib;
+namespace Phix_Project\CommandLineLib;
 
-use Phix\ValidationLib\MustBeValidFile;
-use Phix\ValidationLib\MustBeWriteable;
-use Phix\ValidationLib\MustBeValidPath;
+use Phix_Project\ValidationLib\MustBeValidFile;
+use Phix_Project\ValidationLib\MustBeWriteable;
+use Phix_Project\ValidationLib\MustBeValidPath;
 
 class CommandLineParserTest extends \PHPUnit_Framework_TestCase
 {

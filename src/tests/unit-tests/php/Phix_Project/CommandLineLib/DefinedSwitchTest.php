@@ -44,10 +44,10 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix\CommandLineLib;
+namespace Phix_Project\CommandLineLib;
 
-use Phix\ValidationLib\MustBeWriteable;
-use Phix\ValidationLib\MustBeValidPath;
+use Phix_Project\ValidationLib\MustBeWriteable;
+use Phix_Project\ValidationLib\MustBeValidPath;
 
 class DefinedSwitchTest extends \PHPUnit_Framework_TestCase
 {
@@ -369,7 +369,7 @@ class DefinedSwitchTest extends \PHPUnit_Framework_TestCase
                     ->setArgValidator(new MustBeWriteable());
 
                 // did it work?
-                $this->assertTrue($obj->arg->testMustValidateWith('Phix\ValidationLib\MustBeWriteable'));
+                $this->assertTrue($obj->arg->testMustValidateWith('Phix_Project\ValidationLib\MustBeWriteable'));
         }
 
         public function testCanTestForOptionalArguments()

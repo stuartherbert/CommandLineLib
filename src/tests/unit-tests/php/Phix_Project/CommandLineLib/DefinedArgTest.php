@@ -34,7 +34,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package     Phix
+ * @package     Phix_Project
  * @subpackage  CommandLineLib
  * @author      Stuart Herbert <stuart@stuartherbert.com>
  * @copyright   2011 Stuart Herbert. www.stuartherbert.com
@@ -44,11 +44,11 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix\CommandLineLib;
+namespace Phix_Project\CommandLineLib;
 
-use Phix\ValidationLib\MustBeValidFile;
-use Phix\ValidationLib\MustBeValidPath;
-use Phix\ValidationLib\MustBeWriteable;
+use Phix_Project\ValidationLib\MustBeValidFile;
+use Phix_Project\ValidationLib\MustBeValidPath;
+use Phix_Project\ValidationLib\MustBeWriteable;
 
 class DefinedArgTest extends \PHPUnit_Framework_TestCase
 {
@@ -108,7 +108,7 @@ class DefinedArgTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($name, $obj->name);
                 $this->assertEquals($desc, $obj->desc);
                 $this->assertTrue($obj->testIsOptional());
-                $this->assertTrue($obj->testMustValidateWith('Phix\ValidationLib\MustBeValidFile'));
+                $this->assertTrue($obj->testMustValidateWith('Phix_Project\ValidationLib\MustBeValidFile'));
         }
 
         public function testCanRequireAValidPath()
@@ -123,7 +123,7 @@ class DefinedArgTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($name, $obj->name);
                 $this->assertEquals($desc, $obj->desc);
                 $this->assertTrue($obj->testIsOptional());
-                $this->assertTrue($obj->testMustValidateWith('Phix\ValidationLib\MustBeValidPath'));
+                $this->assertTrue($obj->testMustValidateWith('Phix_Project\ValidationLib\MustBeValidPath'));
         }
 
         public function testCanRequireWriteableArg()
@@ -138,7 +138,7 @@ class DefinedArgTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($name, $obj->name);
                 $this->assertEquals($desc, $obj->desc);
                 $this->assertTrue($obj->testIsOptional());
-                $this->assertTrue($obj->testMustValidateWith('Phix\ValidationLib\MustBeWriteable'));
+                $this->assertTrue($obj->testMustValidateWith('Phix_Project\ValidationLib\MustBeWriteable'));
         }
 
         public function testCanSetDefaultValueForArg()
@@ -167,8 +167,8 @@ class DefinedArgTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($name, $obj->name);
                 $this->assertEquals($desc, $obj->desc);
                 $this->assertTrue($obj->testIsOptional());
-                $this->assertTrue($obj->testMustValidateWith('Phix\ValidationLib\MustBeWriteable'));
-                $this->assertFalse($obj->testMustValidateWith('Phix\ValidationLib\MustBeValidFile'));
+                $this->assertTrue($obj->testMustValidateWith('Phix_Project\ValidationLib\MustBeWriteable'));
+                $this->assertFalse($obj->testMustValidateWith('Phix_Project\ValidationLib\MustBeValidFile'));
         }
         
         public function testAnExceptionIsNotThrownIfValidatorClassDoesNotExist()
@@ -183,7 +183,7 @@ class DefinedArgTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($name, $obj->name);
                 $this->assertEquals($desc, $obj->desc);
                 $this->assertTrue($obj->testIsOptional());
-                $this->assertFalse($obj->testMustValidateWith('Phix\ValidationLib\MustNotBeWriteable'));
+                $this->assertFalse($obj->testMustValidateWith('Phix_Project\ValidationLib\MustNotBeWriteable'));
         }
 
         public function testCanValidateAnArgsValue()
@@ -197,7 +197,7 @@ class DefinedArgTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($name, $obj->name);
                 $this->assertEquals($desc, $obj->desc);
                 $this->assertTrue($obj->testIsOptional());
-                $this->assertTrue($obj->testMustValidateWith('Phix\ValidationLib\MustBeValidFile'));
+                $this->assertTrue($obj->testMustValidateWith('Phix_Project\ValidationLib\MustBeValidFile'));
 
                 // now, validate the data
                 $return = $obj->testIsValid(__FILE__);
@@ -216,7 +216,7 @@ class DefinedArgTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($name, $obj->name);
                 $this->assertEquals($desc, $obj->desc);
                 $this->assertTrue($obj->testIsOptional());
-                $this->assertTrue($obj->testMustValidateWith('Phix\ValidationLib\MustBeValidPath'));
+                $this->assertTrue($obj->testMustValidateWith('Phix_Project\ValidationLib\MustBeValidPath'));
 
                 // now, validate the data
                 $return = $obj->testIsValid(__FILE__);
