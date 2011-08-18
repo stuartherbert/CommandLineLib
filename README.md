@@ -38,6 +38,7 @@ Development Environment
 If you want to patch or enhance this component, you will need to create a suitable development environment. The easiest way to do that is to install phix4componentdev:
 
     # phix4componentdev
+    sudo apt-get install php5-xdebug
     sudo apt-get install php5-imagick
     sudo pear channel-discover pear.phix-project.org
     sudo pear -D auto_discover=1 install -Ba phix/phix4componentdev
