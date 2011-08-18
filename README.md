@@ -16,16 +16,18 @@ As A Dependency On Your Component
 
 If you are creating a component that relies on CommandLineLib, please make sure that you add CommandLineLib to your component's package.xml file:
 
-    <dependencies>
-      <required>
-        <package>
-	  <name>CommandLineLib</name>
-	  <channel>pear.phix-project.org</channel>
-	  <min>2.0.0</min>
-	  <max>2.999.9999</max>
-	</package>
-      </required>
-    </dependencies>
+```xml
+<dependencies>
+  <required>
+    <package>
+      <name>CommandLineLib</name>
+      <channel>pear.phix-project.org</channel>
+      <min>2.0.0</min>
+      <max>2.999.9999</max>
+    </package>
+  </required>
+</dependencies>
+```
 
 Usage
 -----
