@@ -46,58 +46,97 @@
 
 namespace Phix_Project\CommandLineLib;
 
+/**
+ * Represents a switch that has been parsed from the command-line
+ */
 class ParsedSwitch
 {
         /**
-         *
+         * The full definition for this switch
+         * 
          * @var DefinedSwitch
          */
         public $definition = null;
 
         /**
-         *
+         * The name of this switch
+         * 
          * @var string
          */
         public $name = null;
+        
         /**
-         *
+         * Any arguments that have been passed to this switch
+         * 
          * @var array
          */
         public $values  = array();
 
         /**
-         *
+         * How many times this switch has been seen on the command-line
+         * 
          * @var int
          */
         public $invokes = 0;
 
         /**
-         *
+         * For switches with optional arguments, are we using the argument's
+         * default value (because the argument wasn't supplied on the
+         * command line)?
+         * 
          * @var boolean
          */
         public $isUsingDefaultValue = false;
 
+        /**
+         * Constructor
+         * 
+         * @param DefinedSwitch $switch 
+         */
         public function __construct(DefinedSwitch $switch)
         {
                 $this->definition = $switch;
                 $this->name       = $switch->name;
         }
 
+        /**
+         * Increment the counter of how many times the parser has seen
+         * this switch on the command-line
+         */
         public function addToInvokeCount()
         {
                 $this->invokes++;
         }
 
+        /**
+         * Add an argument's value to the list that the parser has seen
+         * for this switch on the command-line
+         * 
+         * @param string $value 
+         */
         public function addValue($value)
         {
                 $this->values[] = $value;
         }
 
+        /**
+         * Remember that the parser has not seen this switch's argument,
+         * and so we are having to use the argument's defined default
+         * value
+         */
         public function setIsUsingDefaultValue()
         {
                 $this->isUsingDefaultValue = true;
         }
         
+        /**
+         * Run the switch's argument's validators against the list of
+         * values that the command-line parser found earlier
+         * 
+         * @return array 
+         *      a list of error messages
+         *      this list is empty if the validators all pass
+         */
         public function validateValues()
         {
                 $return = array();
@@ -123,6 +162,15 @@ class ParsedSwitch
                 return $return;
         }
 
+        /**
+         * Get the first value seen for this switch
+         * 
+         * This is a helper method for those switches that cannot be
+         * repeated on the command-line (and therefore, cannot have more
+         * than one parsed value)
+         * 
+         * @return string
+         */
         public function getFirstValue()
         {
                 if (count($this->values) > 0)
@@ -132,7 +180,13 @@ class ParsedSwitch
 
                 return null;
         }
-
+        
+        /**
+         * Is this switch's argument using the default value, from the
+         * switch's argument's definition?
+         * 
+         * @return boolean
+         */
         public function testIsDefaultValue()
         {
                 return $this->isUsingDefaultValue;

@@ -46,20 +46,37 @@
 
 namespace Phix_Project\CommandLineLib;
 
+/**
+ * Container for all of the switches parsed by the command-line parser
+ */
 class ParsedSwitches
 {
         /**
-         *
-         * @var array
+         * A list of the switches that have been parsed, indexed by the
+         * name of the switch's DefinedSwitch
+         * 
+         * @var array(ParsedSwitch)
          */
         protected $switchesByName  = array();
 
         /**
-         *
+         * A list of the switches that have been parsed, in the order
+         * that the parser found them on the command line
+         * 
          * @var array
          */
 	protected $switchesByOrder = array();
 
+        /**
+         * Add a switch to this collection
+         * 
+         * @param DefinedSwitches $expectedOptions
+         *      A list of the switches that are allowed
+         * @param string $name
+         *      The name of the switch to add to this collection
+         * @param  $arg 
+         *      The value of any argument found by the parser
+         */
         public function addSwitch(DefinedSwitches $expectedOptions, $name, $arg = true)
         {
                 $this->requireValidExpectedSwitchName($expectedOptions, $name);
@@ -67,6 +84,18 @@ class ParsedSwitches
                 $this->addSwitchByOrder($expectedOptions, $name, $arg);
         }
 
+        /**
+         * Add a switch to our 'by-name' indexed list
+         * 
+         * @param DefinedSwitches $expectedOptions
+         *      A list of the switches that are allowed
+         * @param string $name
+         *      The name of the switch to add to this collection
+         * @param type $arg
+         *      The value of any argument found by the parser
+         * @param boolean $isDefaultValue 
+         *      True if $arg is the default value for this switch
+         */
         protected function addSwitchByName(DefinedSwitches $expectedOptions, $name, $arg, $isDefaultValue = false)
         {
                 if (!isset($this->switchesByName[$name]))
@@ -82,6 +111,18 @@ class ParsedSwitches
                 }
         }
 
+        /**
+         * Add a switch to our 'by-order' indexed list
+         * 
+         * @param DefinedSwitches $expectedOptions
+         *      A list of the switches that are allowed
+         * @param string $name
+         *      The name of the switch to add to this collection
+         * @param type $arg
+         *      The value of any argument found by the parser
+         * @param boolean $isDefaultValue 
+         *      True if $arg is the default value for this switch
+         */
         protected function addSwitchByOrder(DefinedSwitches $expectedOptions, $name, $arg, $isDefaultValue = false)
         {
                 $parsedOption = new ParsedSwitch($expectedOptions->getSwitchByName($name));
@@ -95,19 +136,48 @@ class ParsedSwitches
 		$this->switchesByOrder[] = $parsedOption;
         }
 
-        public function addDefaultValue(DefinedSwitches $expectedOptions, $switchName, $value)
+        /**
+         * Add a switch that the user never supplied on the command line,
+         * but which does have a default value.
+         * 
+         * This is used by the CommandLineParser to merge in all switches
+         * that have a default value, leaving it to us to make sure that
+         * we do not overwrite any switches that the CommandLineParser
+         * previously found
+         * 
+         * @param DefinedSwitches $expectedOptions
+         * @param type $switchName
+         * @param type $value
+         * @return type 
+         */
+        
+        public function addSwitchWithDefaultValueIfUnseen(DefinedSwitches $expectedOptions, $switchName, $value)
         {
                 $this->requireValidExpectedSwitchName($expectedOptions, $switchName);
+                
                 // has this switch already been invoked by the user?
                 if (isset($this->switchesByName[$switchName]))
                 {
                         // yes
+                        // 
+                        // we are only allowed to add switches that we
+                        // have not seen before!
+                        //
+                        // NOTE: this is not a programming error when this
+                        //       occurs
                         return;
                 }
+                
                 $this->addSwitchByName($expectedOptions, $switchName, $value, true);
                 $this->addSwitchByOrder($expectedOptions, $switchName, $value, true);
         }
-
+        
+        /**
+         * Have we already seen this switch?
+         * 
+         * @param string $switchName
+         * @return boolean
+         */
         public function testHasSwitch($switchName)
         {
                 if (isset($this->switchesByName[$switchName]))
@@ -118,40 +188,99 @@ class ParsedSwitches
                 return false;
         }
 
+        /**
+         * Get a full list of the switches that we have
+         * 
+         * The returned list is indexed by name, not by the order that
+         * we have seen the switches
+         * 
+         * @return boolean
+         */
         public function getSwitches()
         {
                 return $this->switchesByName;
         }
 
+        /**
+         * Return a switch
+         * 
+         * Throws an Exception if the switch is one we have not seen yet
+         * 
+         * @param string $switchName
+         * @return DefinedSwitch
+         */
         public function getSwitch($switchName)
         {
                 $this->requireValidSwitchName($switchName);
                 return $this->switchesByName[$switchName];
         }
 
+        /**
+         * Get a list of the switches that we have seen
+         * 
+         * The returned list is sorted in the order that we saw the switches
+         * 
+         * @return array
+         */
         public function getSwitchesByOrder()
         {
                 return $this->switchesByOrder;
         }
 
+        /**
+         * Get all of the values we've seen for a given switch's argument
+         * 
+         * Multiple values will exist only for switches that are allowed
+         * to repeat on the command-line
+         * 
+         * @param string $switchName
+         * @return array
+         */
         public function getArgsForSwitch($switchName)
         {
                 $this->requireValidSwitchName($switchName);
                 return $this->switchesByName[$switchName]->values;
         }
 
+        /**
+         * Get the value we've seen for a given switch's argument
+         * 
+         * This is the very useful method to call when you know that the
+         * switch you're interested in is never ever allowed to repeat
+         * on the command-line
+         * 
+         * @param string $switchName
+         * @return string
+         */
         public function getFirstArgForSwitch($switchName)
         {
                 $this->requireValidSwitchName($switchName);
                 return $this->switchesByName[$switchName]->values[0];
         }
 
+        /**
+         * How many times has a switch been seen on the command-line?
+         * 
+         * @param string $switchName
+         * @return int 
+         */
         public function getInvokeCountForSwitch($switchName)
         {
-                $this->requireValidSwitchName($switchName);
+                if (!isset($this->switchesByName[$switchName]))
+                {
+                        return 0;
+                }
+                
                 return $this->switchesByName[$switchName]->invokes;
         }
 
+        /**
+         * For each switch that we have seen, run any validators that have
+         * been defined for that switch.
+         * 
+         * @return array
+         *      The error messages returned by the validators
+         */
         public function validateSwitchValues()
         {
                 $return = array();
@@ -166,6 +295,15 @@ class ParsedSwitches
                 return $return;
         }
 
+        /**
+         * Make sure that we have seen a named switch before
+         * 
+         * If we have not seen the switch, throw an Exception.  This is
+         * a helper method to make sure that we fail fast, fail hard if
+         * a programmatic error has occurred at runtime
+         * 
+         * @param string $switchName 
+         */
         protected function requireValidSwitchName($switchName)
         {
                 if (!$this->testHasSwitch($switchName))
@@ -174,6 +312,17 @@ class ParsedSwitches
                 }
         }
 
+        /**
+         * Make sure that a named switch is in the list of defined switches
+         * that we are allowed to accept
+         * 
+         * If the switch isn't in the list of defined switches, throw an
+         * Exception.  This is a helper method to make sure that we fail
+         * fast, fail hard if a programmatic error has occurred at runtime.
+         * 
+         * @param DefinedSwitches $expectedOptions
+         * @param string $switchName 
+         */
         protected function requireValidExpectedSwitchName(DefinedSwitches $expectedOptions, $switchName)
         {
                 if (!$expectedOptions->testHasSwitchByName($switchName))

@@ -48,23 +48,101 @@ namespace Phix_Project\CommandLineLib;
 
 use Phix_Project\ValidationLib\Validator;
 
+/**
+ * Represents a single definition of a single command-line switch
+ * 
+ * We only need one DefinedSwitch to represent all of the valid forms of
+ * a single switch
+ */
 class DefinedSwitch
 {
+        /**
+         * The name of the switch
+         * 
+         * @var string
+         */
         public $name;
+        
+        /**
+         * The switch's short description
+         * 
+         * This can be used by the calling app, when outputing help to
+         * the user
+         * 
+         * @var string
+         */
         public $desc;
+        
+        /**
+         * The switch's long description
+         * 
+         * This can be used by the calling app, when outputing help to
+         * the user
+         * 
+         * @var string
+         */
         public $longdesc;
+        
+        /**
+         * A list of the different short switches
+         * 
+         * Any one switch can have multiple short switches. The classic
+         * example is '-?' and '-h', both of which do the same thing in
+         * well-behaved command-line applications
+         * 
+         * @var array(string)
+         */
         public $shortSwitches = array();
+        
+        /**
+         * A list of the different long switches
+         * 
+         * Any one switch can have multiple long switches. The classic
+         * example is '--?' and '--help', both of which do the same thing
+         * in well-behaved command-line applications
+         * 
+         * @var array(string)
+         */
         public $longSwitches = array();
 
         /**
+         * The argument (if any) that this switch expects
+         * 
          * @var DefinedArg
          */
         public $arg = null;
+        
+        /**
+         * A bitset of flags that affect how this switch is parsed by
+         * the command-line parser
+         * 
+         * @var int
+         */
         public $flags = null;
 
+        /**
+         * The default behaviour flag
+         */
         const FLAG_NONE = 0;
+        
+        /**
+         * The behaviour flag for switches that can be repeated on the
+         * command-line
+         * 
+         * The classic example of such a switch is '-vvv', where additional
+         * repeats make the app more and more verbose
+         */
         const FLAG_REPEATABLE = 1;
 
+        /**
+         * Constructor
+         * 
+         * @param string $name
+         *      The switch's name, used as it's ID everywhere in the
+         *      command-line parser
+         * @param string $desc 
+         *      The switch's short description
+         */
         public function __construct($name, $desc)
         {
                 $this->name = $name;
@@ -151,6 +229,15 @@ class DefinedSwitch
                 return $this;
         }
 
+        /**
+         * Set the default value for the argument that this switch
+         * expects
+         * 
+         * This only makes sense if the argument is optional
+         * 
+         * @param string $value the default value for the argument
+         * @return DefinedSwitch 
+         */
         public function setArgHasDefaultValueOf($value)
         {
                 $this->requireValidArg();
@@ -158,6 +245,17 @@ class DefinedSwitch
                 return $this;
         }
 
+        /**
+         * Add Validator object to the switch's argument
+         * 
+         * The Validators are run, in the order that they've been added,
+         * when the command-line parser finds the argument for this switch.
+         * They are used to cover the very basics, but sophisticated
+         * Validators could be created and added too.
+         * 
+         * @param Validator $validator
+         * @return DefinedSwitch 
+         */
         public function setArgValidator(Validator $validator)
         {
                 $this->requireValidArg();
@@ -286,6 +384,12 @@ class DefinedSwitch
                 return false;
         }
 
+        /**
+         * Return a list of the different forms of this switch, in a form
+         * that is suitable for building up human-readable help messages
+         * 
+         * @return array
+         */
         public function getHumanReadableSwitchList()
         {
                 $return = array();
