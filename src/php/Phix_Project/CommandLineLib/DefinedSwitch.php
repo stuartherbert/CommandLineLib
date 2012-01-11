@@ -47,10 +47,11 @@
 namespace Phix_Project\CommandLineLib;
 
 use Phix_Project\ValidationLib\Validator;
+use Phix_Project\ContractLib\Contract;
 
 /**
  * Represents a single definition of a single command-line switch
- * 
+ *
  * We only need one DefinedSwitch to represent all of the valid forms of
  * a single switch
  */
@@ -58,64 +59,64 @@ class DefinedSwitch
 {
         /**
          * The name of the switch
-         * 
+         *
          * @var string
          */
         public $name;
-        
+
         /**
          * The switch's short description
-         * 
+         *
          * This can be used by the calling app, when outputing help to
          * the user
-         * 
+         *
          * @var string
          */
         public $desc;
-        
+
         /**
          * The switch's long description
-         * 
+         *
          * This can be used by the calling app, when outputing help to
          * the user
-         * 
+         *
          * @var string
          */
         public $longdesc;
-        
+
         /**
          * A list of the different short switches
-         * 
+         *
          * Any one switch can have multiple short switches. The classic
          * example is '-?' and '-h', both of which do the same thing in
          * well-behaved command-line applications
-         * 
+         *
          * @var array(string)
          */
         public $shortSwitches = array();
-        
+
         /**
          * A list of the different long switches
-         * 
+         *
          * Any one switch can have multiple long switches. The classic
          * example is '--?' and '--help', both of which do the same thing
          * in well-behaved command-line applications
-         * 
+         *
          * @var array(string)
          */
         public $longSwitches = array();
 
         /**
          * The argument (if any) that this switch expects
-         * 
+         *
          * @var DefinedArg
          */
         public $arg = null;
-        
+
         /**
          * A bitset of flags that affect how this switch is parsed by
          * the command-line parser
-         * 
+         *
          * @var int
          */
         public $flags = null;
@@ -124,11 +125,11 @@ class DefinedSwitch
          * The default behaviour flag
          */
         const FLAG_NONE = 0;
-        
+
         /**
          * The behaviour flag for switches that can be repeated on the
          * command-line
-         * 
+         *
          * The classic example of such a switch is '-vvv', where additional
          * repeats make the app more and more verbose
          */
@@ -136,11 +137,11 @@ class DefinedSwitch
 
         /**
          * Constructor
-         * 
+         *
          * @param string $name
          *      The switch's name, used as it's ID everywhere in the
          *      command-line parser
-         * @param string $desc 
+         * @param string $desc
          *      The switch's short description
          */
         public function __construct($name, $desc)
@@ -152,7 +153,7 @@ class DefinedSwitch
         /**
          * Set it so that this switch is allowed to be repeated on
          * the command-line by the user
-         * 
+         *
          * @return DefinedSwitch
          */
         public function setSwitchIsRepeatable()
@@ -170,6 +171,13 @@ class DefinedSwitch
          */
         public function setWithShortSwitch($switch)
         {
+                // catch programming errors
+                Contract::PreConditions(function() use ($switch)
+                {
+                        Contract::RequiresValue($switch, is_string($switch), '$switch must be a string');
+                        Contract::RequiresValue($switch, strlen($switch) > 0, '$switch cannot be an empty string');
+                });
+
                 // make sure the switch does not start with a '-'!!
                 if ($switch{0} == '-')
                 {
@@ -190,6 +198,13 @@ class DefinedSwitch
          */
         public function setWithLongSwitch($switch)
         {
+                // catch programming errors
+                Contract::PreConditions(function() use ($switch)
+                {
+                        Contract::RequiresValue($switch, is_string($switch), '$switch must be a string');
+                        Contract::RequiresValue($switch, strlen($switch) > 0, '$switch cannot be an empty string');
+                });
+
                 // make sure the switch does not start with a '-'!!
                 if ($switch{0} == '-')
                 {
@@ -210,6 +225,16 @@ class DefinedSwitch
          */
         public function setWithOptionalArg($argName, $argDesc)
         {
+                // catch programming errors
+                Contract::PreConditions(function() use ($argName, $argDesc)
+                {
+                        Contract::RequiresValue($argName, is_string($argName), '$argName must be a string');
+                        Contract::RequiresValue($argName, strlen($argName) > 0, '$argName cannot be an empty string');
+
+                        Contract::RequiresValue($argDesc, is_string($argDesc), '$argDesc must be a string');
+                        Contract::RequiresValue($argDesc, strlen($argDesc) > 0, '$argDesc cannot be an empty string');
+                });
+
                 $this->arg = new DefinedArg($argName, $argDesc);
                 $this->arg->setIsOptional();
                 return $this;
@@ -217,13 +242,23 @@ class DefinedSwitch
 
         /**
          * Add an argument that this switch requires
-         * 
+         *
          * @param string $argName the name of the argument
          * @param string $argDesc the argument's description
          * @return DefinedSwitch
          */
         public function setWithRequiredArg($argName, $argDesc)
         {
+                // catch programming errors
+                Contract::PreConditions(function() use ($argName, $argDesc)
+                {
+                        Contract::RequiresValue($argName, is_string($argName), '$argName must be a string');
+                        Contract::RequiresValue($argName, strlen($argName) > 0, '$argName cannot be an empty string');
+
+                        Contract::RequiresValue($argDesc, is_string($argDesc), '$argDesc must be a string');
+                        Contract::RequiresValue($argDesc, strlen($argDesc) > 0, '$argDesc cannot be an empty string');
+                });
+
                 $this->arg = new DefinedArg($argName, $argDesc);
                 $this->arg->setIsRequired();
                 return $this;
@@ -232,14 +267,21 @@ class DefinedSwitch
         /**
          * Set the default value for the argument that this switch
          * expects
-         * 
+         *
          * This only makes sense if the argument is optional
-         * 
+         *
          * @param string $value the default value for the argument
-         * @return DefinedSwitch 
+         * @return DefinedSwitch
          */
         public function setArgHasDefaultValueOf($value)
         {
+                // catch programming errors
+                Contract::PreConditions(function() use ($value)
+                {
+                        Contract::RequiresValue($value, is_string($value), '$value must be a string');
+                        Contract::RequiresValue($value, strlen($value) > 0, '$value cannot be an empty string');
+                });
+
                 $this->requireValidArg();
                 $this->arg->setDefaultValue($value);
                 return $this;
@@ -247,14 +289,14 @@ class DefinedSwitch
 
         /**
          * Add Validator object to the switch's argument
-         * 
+         *
          * The Validators are run, in the order that they've been added,
          * when the command-line parser finds the argument for this switch.
          * They are used to cover the very basics, but sophisticated
          * Validators could be created and added too.
-         * 
+         *
          * @param Validator $validator
-         * @return DefinedSwitch 
+         * @return DefinedSwitch
          */
         public function setArgValidator(Validator $validator)
         {
@@ -266,12 +308,19 @@ class DefinedSwitch
         /**
          * Provide a longer description of this switch, to be shown during
          * the output of extended help information
-         * 
+         *
          * @param string $desc
          * @return DefinedSwitch $this
          */
         public function setLongDesc($desc)
         {
+                // catch programming errors
+                Contract::PreConditions(function() use ($desc)
+                {
+                        Contract::RequiresValue($desc, is_string($desc), '$desc must be a string');
+                        Contract::RequiresValue($desc, strlen($desc) > 0, '$desc cannot be an empty string');
+                });
+
                 $this->longdesc = $desc;
                 return $this;
         }
@@ -387,7 +436,7 @@ class DefinedSwitch
         /**
          * Return a list of the different forms of this switch, in a form
          * that is suitable for building up human-readable help messages
-         * 
+         *
          * @return array
          */
         public function getHumanReadableSwitchList()
