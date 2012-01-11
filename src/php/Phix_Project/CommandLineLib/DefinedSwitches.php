@@ -46,6 +46,8 @@
 
 namespace Phix_Project\CommandLineLib;
 
+use Phix_Project\ContractLib\Contract;
+
 /**
  * Container for all of the DefinedSwitches that we expect to find in the
  * same place when parsing a command-line
@@ -55,22 +57,22 @@ class DefinedSwitches
         /**
          * A dynamic cache of all of the short switches that have been
          * defined
-         * 
+         *
          * @var array(DefinedSwitch)
          */
         public $shortSwitches = array();
-        
+
         /**
          * A dynamic cache of all of the long switches that have been
          * defined
-         * 
+         *
          * @var array(DefinedSwitch)
          */
         public $longSwitches = array();
-        
+
         /**
          * A list of all of the switches that have been defined
-         * 
+         *
          * @var array(DefinedSwitch)
          */
         public $switches = array();
@@ -83,13 +85,22 @@ class DefinedSwitches
 
         /**
          * Add a switch to the list of allowed switches
-         * 
+         *
          * @param string $name
          * @param string $desc
-         * @return DefinedSwitch 
+         * @return DefinedSwitch
          */
         public function addSwitch($name, $desc)
         {
+                Contract::PreConditions(function() use ($name, $desc)
+                {
+                        Contract::RequiresValue($name, is_string($name), '$name must be a string');
+                        Contract::RequiresValue($name, strlen($name) > 0, '$name cannot be an empty string');
+
+                        Contract::RequiresValue($desc, is_string($desc), '$desc must be a string');
+                        Contract::RequiresValue($desc, strlen($desc) > 0, '$desc cannot be an empty string');
+                });
+
                 // note that our cache of introspected switches
                 // is now invalid
                 $this->allSwitchesLoaded = false;
@@ -104,7 +115,7 @@ class DefinedSwitches
 
         /**
          * Do we have the definition of a specific switch?
-         * 
+         *
          * @param string $switchName
          * @return boolean
          */
@@ -117,10 +128,10 @@ class DefinedSwitches
 
                 return false;
         }
-        
+
         /**
          * Do we have a given short switch?
-         * 
+         *
          * @param string $switch
          * @return boolean
          */
@@ -139,9 +150,9 @@ class DefinedSwitches
 
         /**
          * Get the definition of a given short switch
-         * 
+         *
          * @param string $switchName
-         * @return DefinedSwitch 
+         * @return DefinedSwitch
          */
         public function getShortSwitch($switchName)
         {
@@ -158,7 +169,7 @@ class DefinedSwitches
 
         /**
          * Do we have a definition for a given long switch?
-         * 
+         *
          * @param string $switch
          * @return boolean
          */
@@ -177,7 +188,7 @@ class DefinedSwitches
 
         /**
          * Get the definition for a long switch
-         * 
+         *
          * @param string $switch
          * @return DefinedSwitch
          */
@@ -196,7 +207,7 @@ class DefinedSwitches
 
         /**
          * Get the definition of a switch, by its name
-         * 
+         *
          * @param string $name
          * @return DefinedSwitch
          */
@@ -212,7 +223,7 @@ class DefinedSwitches
 
         /**
          * Get the complete list of defined switches
-         * 
+         *
          * @return array(DefinedSwitch)
          */
         public function getSwitches()
@@ -223,7 +234,7 @@ class DefinedSwitches
         /**
          * Get a complete list of default values for all switches that
          * take arguments
-         * 
+         *
          * @return array(string)
          */
         public function getDefaultValues()
@@ -248,10 +259,10 @@ class DefinedSwitches
         /**
          * Get an array of all of the switches in this definition, sorted
          * into the right order to display in a help message
-         * 
+         *
          * This is for apps like phix, which display a help message that
          * is designed to look like a UNIX manual page
-         * 
+         *
          * @return array(DefinedSwitch)
          */
         public function getSwitchesInDisplayOrder()
