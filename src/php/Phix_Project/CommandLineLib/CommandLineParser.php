@@ -77,7 +77,7 @@ class CommandLineParser
                         Contract::RequiresValue($args, count($args) > 0, '$args cannot be an empty array');
 
                         Contract::RequiresValue($argIndex, is_integer($argIndex), '$argIndex must be an integer');
-                        Contract::RequiresValue($argIndex, count($args) < $argIndex, '$argIndex cannot be beyond the end of $args');
+                        Contract::RequiresValue($argIndex, count($args) >= $argIndex, '$argIndex cannot be more than +1 beyond the end of $args');
 
                         Contract::RequiresValue($expectedOptions, count($expectedOptions->getSwitches()) > 0, '$expectedOptions must have some switches defined');
                 });
@@ -186,7 +186,7 @@ class CommandLineParser
                         Contract::RequiresValue($args, count($args) > 0, '$args cannot be an empty array');
 
                         Contract::RequiresValue($argIndex, is_integer($argIndex), '$argIndex must be an integer');
-                        Contract::RequiresValue($argIndex, count($args) < $argIndex, '$argIndex cannot be beyond the end of $args');
+                        Contract::RequiresValue($argIndex, count($args) > $argIndex, '$argIndex cannot be beyond the end of $args');
 
                         Contract::RequiresValue($expectedOptions, count($expectedOptions->getSwitches()) > 0, '$expectedOptions must have some switches defined');
                 });
@@ -293,7 +293,7 @@ class CommandLineParser
                         Contract::RequiresValue($args, count($args) > 0, '$args cannot be an empty array');
 
                         Contract::RequiresValue($argIndex, is_integer($argIndex), '$argIndex must be an integer');
-                        Contract::RequiresValue($argIndex, count($args) < $argIndex, '$argIndex cannot be beyond the end of $args');
+                        Contract::RequiresValue($argIndex, count($args) > $argIndex, '$argIndex cannot be beyond the end of $args');
 
                         Contract::RequiresValue($expectedOptions, count($expectedOptions->getSwitches()) > 0, '$expectedOptions must have some switches defined');
                 });
@@ -374,13 +374,13 @@ class CommandLineParser
                         Contract::RequiresValue($args, count($args) > 0, '$args cannot be an empty array');
 
                         Contract::RequiresValue($argIndex, is_integer($argIndex), '$argIndex must be an integer');
-                        Contract::RequiresValue($argIndex, count($args) <= $argIndex, '$argIndex cannot be more than +1 beyond the end of $args');
+                        Contract::RequiresValue($argIndex, count($args) >= $argIndex, '$argIndex cannot be more than +1 beyond the end of $args');
 
                         // this is a conditional test because it is legal
                         // for $args[$argindex] to be unset()
                         if (isset($args[$argIndex]))
                         {
-                                Contract::RequiresValue($startFrom, $startFrom < strlen($args[$argIndex]), '$startFrom cannot be beyond the end of $args[$argIndex]');
+                                Contract::RequiresValue($startFrom, $startFrom <= strlen($args[$argIndex]), '$startFrom cannot be more than +1 beyond the end of $args[$argIndex]');
                         }
 
                         Contract::RequiresValue($switchSeen, is_string($switchSeen), '$switchSeen must be a string');
