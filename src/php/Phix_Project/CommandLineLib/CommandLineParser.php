@@ -46,16 +46,48 @@
 
 namespace Phix_Project\CommandLineLib;
 
+use Phix_Project\ContractLib\Contract;
+
+/**
+ * Main entry point for parsing a command line, looking for any expected
+ * switches and their (possibly optional) arguments
+ */
 class CommandLineParser
 {
+        /**
+         * Parse an array of command-line arguments, looking for command-
+         * line switches
+         *
+         * @param array $args
+         *      The array of command-line arguments (normally $argv)
+         * @param int $argIndex
+         *      The current index inside $args to search from
+         * @param DefinedSwitches $expectedOptions
+         *      The list of command-line switches that we support
+         * @return array(ParsedSwitches, int)
+         *      The set of parsed command line switches, plus the new value
+         *      for $argIndex
+         */
         public function parseSwitches($args, $argIndex, DefinedSwitches $expectedOptions)
         {
+                // catch programming errors
+                Contract::Preconditions(function() use ($args, $argIndex, $expectedOptions)
+                {
+                        Contract::RequiresValue($args, is_array($args), '$args must be array');
+                        Contract::RequiresValue($args, count($args) > 0, '$args cannot be an empty array');
+
+                        Contract::RequiresValue($argIndex, is_integer($argIndex), '$argIndex must be an integer');
+                        Contract::RequiresValue($argIndex, count($args) >= $argIndex, '$argIndex cannot be more than +1 beyond the end of $args');
+
+                        Contract::RequiresValue($expectedOptions, count($expectedOptions->getSwitches()) > 0, '$expectedOptions must have some switches defined');
+                });
+
                 // create our return values
-                $ParsedSwitches = new ParsedSwitches($expectedOptions);                
+                $parsedSwitches = new ParsedSwitches($expectedOptions);
                 $argCount = count($args);
 
                 // var_dump($args);
-                
+
                 // let's work through the args from left to right
                 $done = false;
                 while ($argIndex < $argCount && !$done)
@@ -68,7 +100,7 @@ class CommandLineParser
                                 // skip over it
                                 $argIndex++;
                                 $done = true;
-                        }                        
+                        }
                         else if ($args[$argIndex]{0} !== '-')
                         {
                                 // var_dump('Not a switch');
@@ -82,34 +114,83 @@ class CommandLineParser
                                 // var_dump('Parsing short switch');
                                 // var_dump('$argIndex is: ' . $argIndex);
                                 // it is a short switch
-                                $argIndex = $this->parseShortSwitch($args, $argIndex, $ParsedSwitches, $expectedOptions);
+                                $argIndex = $this->parseShortSwitch($args, $argIndex, $parsedSwitches, $expectedOptions);
                                 // var_dump('$argIndex is now: ' . $argIndex);
                         }
                         else
                         {
                                 // var_dump('Parsing long switch');
                                 // it is a long switch
-                                $argIndex = $this->parseLongSwitch($args, $argIndex, $ParsedSwitches, $expectedOptions);
+                                $argIndex = $this->parseLongSwitch($args, $argIndex, $parsedSwitches, $expectedOptions);
                         }
                 }
 
                 // now, we need to merge in the default values for any
                 // arguments that have not been specified by the user
                 $defaultValues = $expectedOptions->getDefaultValues();
-                
+
                 foreach ($defaultValues as $name => $value)
                 {
                         if ($value !== null && $expectedOptions->getSwitchByName($name)->testHasArgument())
                         {
-                                $ParsedSwitches->addDefaultValue($expectedOptions, $name, $value);
+                                $parsedSwitches->addSwitchWithDefaultValueIfUnseen($expectedOptions, $name, $value);
                         }
                 }
-                
-                return array($ParsedSwitches, $argIndex);
+
+                return array($parsedSwitches, $argIndex);
         }
 
-        protected function parseShortSwitch($args, $argIndex, ParsedSwitches $ParsedSwitches, DefinedSwitches $expectedOptions)
+        /**
+         * Take a short switch, and see if it is one that we understand
+         *
+         * This parser supports short switches of the form:
+         *
+         * * -x
+         *      where 'x' is a single switch
+         * * -xfred
+         *      where 'x' is a single switch, and 'fred' is its argument
+         * * -x fred
+         *      where 'x' is a single switch, and 'fred' is its argument
+         * * -xyz
+         *      where 'x', 'y' and 'z' are all short switches
+         * * -xyz fred
+         *      where 'x', 'y' and 'z' are all short switches, and 'fred'
+         *      is the argument to switch 'z'
+         *
+         * These are all of the common short switch types traditionally
+         * supported by UNIX-like systems
+         *
+         * All successfully parsed short switches are added to the
+         * $parsedSwitches object.
+         *
+         * Any unexpected switches, or if there are any switches which are
+         * missing their required argument, will trigger an exception
+         *
+         * @param array $args
+         *      The array of command-line arguments (normally $argv)
+         * @param int $argIndex
+         *      The current index inside $args to search from
+         * @param ParsedSwitches $parsedSwitches
+         *      The list of switches we have already parsed
+         * @param DefinedSwitches $expectedOptions
+         *      The list of command-line switches that we support
+         * @return int
+         *      The new value for $argIndex
+         */
+        protected function parseShortSwitch($args, $argIndex, ParsedSwitches $parsedSwitches, DefinedSwitches $expectedOptions)
         {
+                // catch programming errors
+                Contract::Preconditions(function() use ($args, $argIndex, $expectedOptions)
+                {
+                        Contract::RequiresValue($args, is_array($args), '$args must be array');
+                        Contract::RequiresValue($args, count($args) > 0, '$args cannot be an empty array');
+
+                        Contract::RequiresValue($argIndex, is_integer($argIndex), '$argIndex must be an integer');
+                        Contract::RequiresValue($argIndex, count($args) > $argIndex, '$argIndex cannot be beyond the end of $args');
+
+                        Contract::RequiresValue($expectedOptions, count($expectedOptions->getSwitches()) > 0, '$expectedOptions must have some switches defined');
+                });
+
                 // $args[$argIndex] contains one or more short switches,
                 // which we expect to be defined in $expectedOptions
 
@@ -131,7 +212,7 @@ class CommandLineParser
 
                         // should it have an argument?
                         if ($switch->testHasArgument())
-                        {                                
+                        {
                                 // yes, but it may be optional
                                 // are we the first switch in this string?
                                 if ($j == 1)
@@ -151,7 +232,7 @@ class CommandLineParser
                                 }
                                 else
                                 {
-                                        // are we at the end of the list of switches?                                        
+                                        // are we at the end of the list of switches?
                                         if ($j != $switchStringLength - 1)
                                         {
                                                 // no, we are not
@@ -164,7 +245,7 @@ class CommandLineParser
                         }
 
                         // var_dump("Adding switch " . $switch->name);
-                        $ParsedSwitches->addSwitch($expectedOptions, $switch->name, $arg);
+                        $parsedSwitches->addSwitch($expectedOptions, $switch->name, $arg);
                 }
 
                 // increment our counter through the args
@@ -174,8 +255,49 @@ class CommandLineParser
                 return $argIndex;
         }
 
-        protected function parseLongSwitch($args, $argIndex, ParsedSwitches $ParsedSwitches, DefinedSwitches $expectedOptions)
+        /**
+         * Take a long switch, and see if it is one that we are expecting
+         *
+         * This parser supports the following long switch formats:
+         *
+         * * --switch
+         * * --switch=<argument>
+         * * --switch <argument>
+         *
+         * These are all of the common long switch formats traditionally
+         * supported on UNIX-like systems
+         *
+         * All successfully parsed long switches are added to the
+         * $parsedSwitches object
+         *
+         * Any unexpected long switches, or any long switches that are
+         * missing their argument, will trigger an exception
+         *
+         * @param array $args
+         *      The array of command-line arguments (normally $argv)
+         * @param int $argIndex
+         *      The current index inside $args to search from
+         * @param ParsedSwitches $parsedSwitches
+         *      The list of switches that we have already parsed
+         * @param DefinedSwitches $expectedOptions
+         *      The list of command-line switches that we support
+         * @return int
+         *      The new value of $argIndex
+         */
+        protected function parseLongSwitch($args, $argIndex, ParsedSwitches $parsedSwitches, DefinedSwitches $expectedOptions)
         {
+                // catch programming errors
+                Contract::Preconditions(function() use ($args, $argIndex, $expectedOptions)
+                {
+                        Contract::RequiresValue($args, is_array($args), '$args must be array');
+                        Contract::RequiresValue($args, count($args) > 0, '$args cannot be an empty array');
+
+                        Contract::RequiresValue($argIndex, is_integer($argIndex), '$argIndex must be an integer');
+                        Contract::RequiresValue($argIndex, count($args) > $argIndex, '$argIndex cannot be beyond the end of $args');
+
+                        Contract::RequiresValue($expectedOptions, count($expectedOptions->getSwitches()) > 0, '$expectedOptions must have some switches defined');
+                });
+
                 // $args[i] contains a long switch, and might contain
                 // a parameter too
                 $equalsPos = strpos($args[$argIndex], '=');
@@ -217,14 +339,54 @@ class CommandLineParser
                 // increment to the next item in the list
                 $argIndex++;
 
-                $ParsedSwitches->addSwitch($expectedOptions, $switch->name, $arg);
+                $parsedSwitches->addSwitch($expectedOptions, $switch->name, $arg);
 
                 // all done
                 return $argIndex;
         }
 
+        /**
+         * Examine the command line for a (possibly optional) argument
+         * for a switch that we have just found on that command line
+         *
+         * @param array $args
+         *      The array of command-line arguments (normally $argv)
+         * @param int $argIndex
+         *      The current index inside $args to search from.
+         *      This may be just beyond the end of the command-line args
+         *      if the last command-line argument is a switch.
+         * @param int $startFrom
+         *      The offset inside $args[$argIndex] where the argument string
+         *      starts
+         * @param DefinedSwitch $switch
+         *      The command-line switch that may need an argument
+         * @param string $switchSeen
+         *      The actual switch we found on the command-line
+         * @return array(string, int)
+         *      The argument we have parsed, plus the new value of $argIndex
+         */
         protected function parseArgument($args, $argIndex, $startFrom, DefinedSwitch $switch, $switchSeen)
         {
+                // catch programming errors
+                Contract::Preconditions(function() use ($args, $argIndex, $startFrom, $switchSeen)
+                {
+                        Contract::RequiresValue($args, is_array($args), '$args must be array');
+                        Contract::RequiresValue($args, count($args) > 0, '$args cannot be an empty array');
+
+                        Contract::RequiresValue($argIndex, is_integer($argIndex), '$argIndex must be an integer');
+                        Contract::RequiresValue($argIndex, count($args) >= $argIndex, '$argIndex cannot be more than +1 beyond the end of $args');
+
+                        // this is a conditional test because it is legal
+                        // for $args[$argindex] to be unset()
+                        if (isset($args[$argIndex]))
+                        {
+                                Contract::RequiresValue($startFrom, $startFrom <= strlen($args[$argIndex]), '$startFrom cannot be more than +1 beyond the end of $args[$argIndex]');
+                        }
+
+                        Contract::RequiresValue($switchSeen, is_string($switchSeen), '$switchSeen must be a string');
+                        Contract::RequiresValue($switchSeen, strlen($switchSeen) > 0, '$switchSeen cannot be an empty string');
+                });
+
                 // initialise the return value
                 $arg = null;
 

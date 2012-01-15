@@ -46,15 +46,49 @@
 
 namespace Phix_Project\CommandLineLib;
 
+use Phix_Project\ContractLib\Contract;
 use Phix_Project\ValidationLib\Validator;
 
+/**
+ * Represents the definition of a single argument for a single switch
+ */
 class DefinedArg
 {
+        /**
+         * The argument's name
+         *
+         * @var string
+         */
         public $name;
+
+        /**
+         * The argument's description
+         *
+         * @var string
+         */
         public $desc;
+
+        /**
+         * The default value of this argument, used if this argument isn't
+         * found when the command-line is parsed
+         *
+         * @var string
+         */
         public $defaultValue = null;
+
+        /**
+         * Is this argument mandatory?
+         *
+         * @var boolean
+         */
         public $isRequired = false;
 
+        /**
+         * How do we validate this argument before the calling app is
+         * allowed to see it?
+         *
+         * @var array(Validator)
+         */
         protected $validators = array();
 
         /**
@@ -99,7 +133,7 @@ class DefinedArg
 
         /**
          * Is this argument optional?
-         * 
+         *
          * @return boolean
          */
         public function testIsOptional()
@@ -123,12 +157,19 @@ class DefinedArg
 
         /**
          * Does this arg have a specific validator defined?
-         * 
+         *
          * @param string $validatorName
          * @return boolean
          */
         public function testMustValidateWith($validatorName)
         {
+                // catch programming errors
+                Contract::Preconditions(function() use($validatorName)
+                {
+                        Contract::RequiresValue($validatorName, is_string($validatorName), '$validatorName must be a string');
+                        Contract::RequiresValue($validatorName, strlen($validatorName) > 0, '$validatorName cannot be an empty string');
+                });
+
                 foreach ($this->validators as $validator)
                 {
                         if (get_class($validator) == $validatorName)
@@ -167,7 +208,7 @@ class DefinedArg
 
         /**
          * Remember the default value for this arg
-         * 
+         *
          * @param mixed $value
          * @return DefinedArg $this
          */

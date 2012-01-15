@@ -62,18 +62,18 @@ class ParsedSwitchesTest extends \PHPUnit_Framework_TestCase
                 $expectedOptions->addSwitch($switchName, $switchDesc);
 
                 // create the ParsedSwitches object
-                $ParsedSwitches = new ParsedSwitches();
-                $ParsedSwitches->addSwitch($expectedOptions, $switchName);
+                $parsedSwitches = new ParsedSwitches();
+                $parsedSwitches->addSwitch($expectedOptions, $switchName);
 
                 // did it work?
-                $this->assertTrue($ParsedSwitches->testHasSwitch($switchName));
+                $this->assertTrue($parsedSwitches->testHasSwitch($switchName));
 
                 // and what happens if we try to add a switch
                 // that has not been defined?
                 $caughtException = false;
                 try
                 {
-                        $ParsedSwitches->addSwitch($expectedOptions, 'harry');
+                        $parsedSwitches->addSwitch($expectedOptions, 'harry');
                 }
                 catch (\Exception $e)
                 {
@@ -93,14 +93,14 @@ class ParsedSwitchesTest extends \PHPUnit_Framework_TestCase
                 $expectedOptions->addSwitch($switchName, $switchDesc);
 
                 // create the ParsedSwitches object
-                $ParsedSwitches = new ParsedSwitches($expectedOptions);
-                $ParsedSwitches->addSwitch($expectedOptions, $switchName);
+                $parsedSwitches = new ParsedSwitches($expectedOptions);
+                $parsedSwitches->addSwitch($expectedOptions, $switchName);
 
                 // did it work?
-                $this->assertTrue($ParsedSwitches->testHasSwitch($switchName));
+                $this->assertTrue($parsedSwitches->testHasSwitch($switchName));
 
                 // if the switch is not there?
-                $this->assertFalse($ParsedSwitches->testHasSwitch('harry'));
+                $this->assertFalse($parsedSwitches->testHasSwitch('harry'));
         }
 
         public function testCanGetSwitchByName()
@@ -120,13 +120,13 @@ class ParsedSwitchesTest extends \PHPUnit_Framework_TestCase
                 $switch2 = $expectedOptions->getSwitchByName($switchName2);
 
                 // create the ParsedSwitches object
-                $ParsedSwitches = new ParsedSwitches($expectedOptions);
-                $ParsedSwitches->addSwitch($expectedOptions, $switchName1);
-                $ParsedSwitches->addSwitch($expectedOptions, $switchName2);
+                $parsedSwitches = new ParsedSwitches($expectedOptions);
+                $parsedSwitches->addSwitch($expectedOptions, $switchName1);
+                $parsedSwitches->addSwitch($expectedOptions, $switchName2);
 
                 // did it work?
-                $retrievedSwitch1 = $ParsedSwitches->getSwitch($switchName1);
-                $retrievedSwitch2 = $ParsedSwitches->getSwitch($switchName2);
+                $retrievedSwitch1 = $parsedSwitches->getSwitch($switchName1);
+                $retrievedSwitch2 = $parsedSwitches->getSwitch($switchName2);
 
                 $this->assertTrue($retrievedSwitch1 instanceof ParsedSwitch);
                 $this->assertEquals($switch1->name, $retrievedSwitch1->name);
@@ -140,7 +140,7 @@ class ParsedSwitchesTest extends \PHPUnit_Framework_TestCase
                 $caughtException = false;
                 try
                 {
-                        $ParsedSwitches->getSwitch('notdefined');
+                        $parsedSwitches->getSwitch('notdefined');
                 }
                 catch (\Exception $e)
                 {
@@ -157,11 +157,11 @@ class ParsedSwitchesTest extends \PHPUnit_Framework_TestCase
                 $expectedOptions->addSwitch('fred', 'trout')
                                 ->setWithOptionalArg('<fish>', 'which kind of fish you like');
 
-                $ParsedSwitches = new ParsedSwitches();
-                $ParsedSwitches->addSwitch($expectedOptions, 'fred', 'salmon');
+                $parsedSwitches = new ParsedSwitches();
+                $parsedSwitches->addSwitch($expectedOptions, 'fred', 'salmon');
 
                 // can we do this?
-                $retrievedArgs = $ParsedSwitches->getArgsForSwitch('fred');
+                $retrievedArgs = $parsedSwitches->getArgsForSwitch('fred');
 
                 // did it work?
                 $this->assertTrue(is_array($retrievedArgs));
@@ -177,11 +177,11 @@ class ParsedSwitchesTest extends \PHPUnit_Framework_TestCase
                 $expectedOptions->addSwitch('fred', 'trout')
                                 ->setWithOptionalArg('<fish>', 'which kind of fish you like');
 
-                $ParsedSwitches = new ParsedSwitches();
-                $ParsedSwitches->addSwitch($expectedOptions, 'fred', 'salmon');
+                $parsedSwitches = new ParsedSwitches();
+                $parsedSwitches->addSwitch($expectedOptions, 'fred', 'salmon');
 
                 // can we do this?
-                $retrievedArg = $ParsedSwitches->getFirstArgForSwitch('fred');
+                $retrievedArg = $parsedSwitches->getFirstArgForSwitch('fred');
 
                 // did it work?
                 $this->assertEquals('salmon', $retrievedArg);
@@ -195,11 +195,11 @@ class ParsedSwitchesTest extends \PHPUnit_Framework_TestCase
                 $expectedOptions->addSwitch('fred', 'trout')
                                 ->setWithOptionalArg('<fish>', 'which kind of fish you like');
 
-                $ParsedSwitches = new ParsedSwitches();
-                $ParsedSwitches->addSwitch($expectedOptions, 'fred');
+                $parsedSwitches = new ParsedSwitches();
+                $parsedSwitches->addSwitch($expectedOptions, 'fred');
 
                 // can we do this?
-                $retrievedArg = $ParsedSwitches->getFirstArgForSwitch('fred');
+                $retrievedArg = $parsedSwitches->getFirstArgForSwitch('fred');
 
                 // did it work?
                 $this->assertTrue($retrievedArg);
@@ -222,12 +222,12 @@ class ParsedSwitchesTest extends \PHPUnit_Framework_TestCase
                 $switch2 = $expectedOptions->getSwitchByName($switchName2);
 
                 // create the ParsedSwitches object
-                $ParsedSwitches = new ParsedSwitches($expectedOptions);
-                $ParsedSwitches->addSwitch($expectedOptions, $switchName1);
-                $ParsedSwitches->addSwitch($expectedOptions, $switchName2);
+                $parsedSwitches = new ParsedSwitches($expectedOptions);
+                $parsedSwitches->addSwitch($expectedOptions, $switchName1);
+                $parsedSwitches->addSwitch($expectedOptions, $switchName2);
 
                 // did it work?
-                $switches = $ParsedSwitches->getSwitches();
+                $switches = $parsedSwitches->getSwitches();
                 $this->assertEquals(2, count($switches));
                 $this->assertSame($switch1, $switches[$switchName1]->definition);
                 $this->assertSame($switch2, $switches[$switchName2]->definition);
@@ -244,18 +244,19 @@ class ParsedSwitchesTest extends \PHPUnit_Framework_TestCase
                 $expectedOptions->addSwitch($switchName, $switchDesc);
 
                 // create the ParsedSwitches object
-                $ParsedSwitches = new ParsedSwitches($expectedOptions);
+                $parsedSwitches = new ParsedSwitches($expectedOptions);
+                $this->assertEquals(0, $parsedSwitches->getInvokeCountForSwitch($switchName));
 
                 // repeat the switch
-                $ParsedSwitches->addSwitch($expectedOptions, $switchName);
-                $ParsedSwitches->addSwitch($expectedOptions, $switchName);
+                $parsedSwitches->addSwitch($expectedOptions, $switchName);
+                $parsedSwitches->addSwitch($expectedOptions, $switchName);
 
                 // did it work?
-                $switches = $ParsedSwitches->getSwitches();
-                $retrievedArgs = $ParsedSwitches->getArgsForSwitch($switchName);
+                $switches = $parsedSwitches->getSwitches();
+                $retrievedArgs = $parsedSwitches->getArgsForSwitch($switchName);
                 $this->assertEquals(1, count($switches));
                 $this->assertEquals(2, count($retrievedArgs));
-                $this->assertEquals(2, $ParsedSwitches->getInvokeCountForSwitch($switchName));
+                $this->assertEquals(2, $parsedSwitches->getInvokeCountForSwitch($switchName));
         }
 
         public function testCanAddRepeatedSwitchesWithArguments()
@@ -282,19 +283,19 @@ class ParsedSwitchesTest extends \PHPUnit_Framework_TestCase
                 );
 
                 // add the switch
-                $ParsedSwitches = new ParsedSwitches();
+                $parsedSwitches = new ParsedSwitches();
                 foreach ($args as $arg)
                 {
-                        $ParsedSwitches->addSwitch($expectedOptions, $switchName, $arg);
+                        $parsedSwitches->addSwitch($expectedOptions, $switchName, $arg);
                 }
 
                 // did it work?
-                $switches = $ParsedSwitches->getSwitches();
+                $switches = $parsedSwitches->getSwitches();
                 $this->assertEquals(1, count($switches));
                 $this->assertEquals($switchName, $switches[$switchName]->name);
-                $this->assertEquals(count($args), count($ParsedSwitches->getArgsForSwitch($switchName)));
-                $this->assertEquals(count($args), $ParsedSwitches->getInvokeCountForSwitch($switchName));
-                $this->assertEquals($args, $ParsedSwitches->getArgsForSwitch($switchName));
+                $this->assertEquals(count($args), count($parsedSwitches->getArgsForSwitch($switchName)));
+                $this->assertEquals(count($args), $parsedSwitches->getInvokeCountForSwitch($switchName));
+                $this->assertEquals($args, $parsedSwitches->getArgsForSwitch($switchName));
         }
 
         public function testCanValidateAllSwitchValuesInOneGo()
@@ -310,12 +311,12 @@ class ParsedSwitchesTest extends \PHPUnit_Framework_TestCase
                          ->setArgValidator(new MustBeInteger());
 
                 // add the parsed results
-                $ParsedSwitches = new ParsedSwitches();
-                $ParsedSwitches->addSwitch($expectedOptions, 'fred', 'trout');
-                $ParsedSwitches->addSwitch($expectedOptions, 'harry', 'salmon');
+                $parsedSwitches = new ParsedSwitches();
+                $parsedSwitches->addSwitch($expectedOptions, 'fred', 'trout');
+                $parsedSwitches->addSwitch($expectedOptions, 'harry', 'salmon');
 
                 // now, can we validate or not?
-                $results = $ParsedSwitches->validateSwitchValues();
+                $results = $parsedSwitches->validateSwitchValues();
 
                 // what happened?
                 $this->assertTrue(is_array($results));
