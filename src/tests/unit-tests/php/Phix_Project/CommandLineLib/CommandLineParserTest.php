@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2011 Stuart Herbert.
+ * Copyright (c) 2011-present Stuart Herbert.
  * Copyright (c) 2010 Gradwell dot com Ltd.
  * All rights reserved.
  *
@@ -37,7 +37,7 @@
  * @package     Phix_Project
  * @subpackage  CommandLineLib
  * @author      Stuart Herbert <stuart@stuartherbert.com>
- * @copyright   2011 Stuart Herbert. www.stuartherbert.com
+ * @copyright   2011-present Stuart Herbert. www.stuartherbert.com
  * @copyright   2010 Gradwell dot com Ltd. www.gradwell.com
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://www.phix-project.org
@@ -82,12 +82,12 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                         ->setWithLongSwitch('lib')
                         ->setWithRequiredArg('<lib>', 'the name of a library to link against')
                         ->setSwitchIsRepeatable();
-                
-		$options->addSwitch('srcFolder', 'add a folder to load source code from')
-			->setWithShortSwitch('s')
-			->setWithLongSwitch('srcFolder')
-			->setWithRequiredArg('<srcFolder>', 'path to the folder to load source code from')
-			->setArgHasDefaultValueOf('/usr/bin/php');
+
+                $options->addSwitch('srcFolder', 'add a folder to load source code from')
+                        ->setWithShortSwitch('s')
+                        ->setWithLongSwitch('srcFolder')
+                        ->setWithRequiredArg('<srcFolder>', 'path to the folder to load source code from')
+                        ->setArgHasDefaultValueOf('/usr/bin/php');
 
                 $options->addSwitch('warnings', 'enable warnings')
                         ->setWithShortSwitch('W')
@@ -118,19 +118,19 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 );
 
                 $parser = new CommandLineParser();
-                list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                $parsed = $parser->parseSwitches($argv, 1, $options);
 
                 // did it work?
-                $this->assertTrue ($ParsedSwitches instanceof ParsedSwitches);
+                $this->assertTrue ($parsed instanceof ParsedCommandLine);
 
                 // is the argsIndex pointing at the right place?
-                $this->assertTrue (is_int($argsIndex));
-                $this->assertEquals(2, $argsIndex);
+                $this->assertTrue (is_int($parsed->argsIndex));
+                $this->assertEquals(2, $parsed->argsIndex);
 
-                $this->assertTrue($ParsedSwitches->testHasSwitch('shortHelp'));
-                $this->assertTrue($ParsedSwitches->testHasSwitch('version'));
+                $this->assertTrue($parsed->switches->testHasSwitch('shortHelp'));
+                $this->assertTrue($parsed->switches->testHasSwitch('version'));
 
-                $switches = $ParsedSwitches->getSwitchesByOrder();
+                $switches = $parsed->switches->getSwitchesByOrder();
                 $this->assertEquals(4, count($switches));
                 $this->assertEquals('version', $switches[0]->name);
                 $this->assertTrue($switches[0]->values[0]);
@@ -158,17 +158,17 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 );
 
                 $parser = new CommandLineParser();
-                list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                $parsed = $parser->parseSwitches($argv, 1, $options);
 
                 // did it work?
-                $this->assertTrue ($ParsedSwitches instanceof ParsedSwitches);
+                $this->assertTrue ($parsed instanceof ParsedCommandLine);
 
                 // is the argsIndex pointing at the right place?
-                $this->assertTrue (is_int($argsIndex));
-                $this->assertEquals(3, $argsIndex);
+                $this->assertTrue (is_int($parsed->argsIndex));
+                $this->assertEquals(3, $parsed->argsIndex);
 
-                $this->assertTrue($ParsedSwitches->testHasSwitch('include'));
-                $switches = $ParsedSwitches->getSwitches();
+                $this->assertTrue($parsed->switches->testHasSwitch('include'));
+                $switches = $parsed->switches->getSwitches();
                 $this->assertTrue(isset($switches['include']));
                 $this->assertEquals('include', $switches['include']->name);
                 $this->assertEquals('/tmp', $switches['include']->getFirstValue());
@@ -187,17 +187,17 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 );
 
                 $parser = new CommandLineParser();
-                list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                $parsed = $parser->parseSwitches($argv, 1, $options);
 
                 // did it work?
-                $this->assertTrue ($ParsedSwitches instanceof ParsedSwitches);
+                $this->assertTrue ($parsed instanceof ParsedCommandLine);
 
                 // is the argsIndex pointing at the right place?
-                $this->assertTrue (is_int($argsIndex));
-                $this->assertEquals(2, $argsIndex);
+                $this->assertTrue (is_int($parsed->argsIndex));
+                $this->assertEquals(2, $parsed->argsIndex);
 
-                $this->assertTrue($ParsedSwitches->testHasSwitch('include'));
-                $switches = $ParsedSwitches->getSwitches();
+                $this->assertTrue($parsed->switches->testHasSwitch('include'));
+                $switches = $parsed->switches->getSwitches();
                 $this->assertTrue(isset($switches['include']));
                 $this->assertEquals('include', $switches['include']->name);
                 $this->assertEquals('/tmp', $switches['include']->getFirstValue());
@@ -217,17 +217,17 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 );
 
                 $parser = new CommandLineParser();
-                list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                $parsed = $parser->parseSwitches($argv, 1, $options);
 
                 // did it work?
-                $this->assertTrue ($ParsedSwitches instanceof ParsedSwitches);
+                $this->assertTrue ($parsed instanceof ParsedCommandLine);
 
                 // is the argsIndex pointing at the right place?
-                $this->assertTrue (is_int($argsIndex));
-                $this->assertEquals(3, $argsIndex);
+                $this->assertTrue (is_int($parsed->argsIndex));
+                $this->assertEquals(3, $parsed->argsIndex);
 
-                $this->assertTrue($ParsedSwitches->testHasSwitch('longHelp'));
-                $this->assertTrue($ParsedSwitches->testHasSwitch('version'));
+                $this->assertTrue($parsed->switches->testHasSwitch('longHelp'));
+                $this->assertTrue($parsed->switches->testHasSwitch('version'));
         }
 
         public function testCanParseLongSwitchWithArgument()
@@ -244,18 +244,18 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 );
 
                 $parser = new CommandLineParser();
-                list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                $parsed = $parser->parseSwitches($argv, 1, $options);
 
                 // did it work?
-                $this->assertTrue ($ParsedSwitches instanceof ParsedSwitches);
+                $this->assertTrue ($parsed instanceof ParsedCommandLine);
 
                 // is the argsIndex pointing at the right place?
-                $this->assertTrue (is_int($argsIndex));
-                $this->assertEquals(3, $argsIndex);
+                $this->assertTrue (is_int($parsed->argsIndex));
+                $this->assertEquals(3, $parsed->argsIndex);
 
-                $this->assertTrue($ParsedSwitches->testHasSwitch('include'));
-                
-                $switches = $ParsedSwitches->getSwitches();
+                $this->assertTrue($parsed->switches->testHasSwitch('include'));
+
+                $switches = $parsed->switches->getSwitches();
                 $this->assertEquals(3, count($switches));
                 $this->assertEquals('include', $switches['include']->name);
                 $this->assertEquals('/tmp', $switches['include']->values[0]);
@@ -274,18 +274,18 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 );
 
                 $parser = new CommandLineParser();
-                list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                $parsed = $parser->parseSwitches($argv, 1, $options);
 
                 // did it work?
-                $this->assertTrue ($ParsedSwitches instanceof ParsedSwitches);
+                $this->assertTrue ($parsed instanceof ParsedCommandLine);
 
                 // is the argsIndex pointing at the right place?
-                $this->assertTrue (is_int($argsIndex));
-                $this->assertEquals(2, $argsIndex);
+                $this->assertTrue (is_int($parsed->argsIndex));
+                $this->assertEquals(2, $parsed->argsIndex);
 
-                $this->assertTrue($ParsedSwitches->testHasSwitch('include'));
+                $this->assertTrue($parsed->switches->testHasSwitch('include'));
 
-                $switches = $ParsedSwitches->getSwitches();
+                $switches = $parsed->switches->getSwitches();
                 $this->assertEquals(3, count($switches));
                 $this->assertEquals('include', $switches['include']->name);
                 $this->assertEquals('/tmp', $switches['include']->values[0]);
@@ -307,24 +307,24 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 );
 
                 $parser = new CommandLineParser();
-                list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                $parsed = $parser->parseSwitches($argv, 1, $options);
 
                 // did it work?
-                $this->assertTrue ($ParsedSwitches instanceof ParsedSwitches);
+                $this->assertTrue ($parsed instanceof ParsedCommandLine);
 
                 // is the argsIndex pointing at the right place?
-                $this->assertTrue (is_int($argsIndex));
-                $this->assertEquals(5, $argsIndex);
+                $this->assertTrue (is_int($parsed->argsIndex));
+                $this->assertEquals(5, $parsed->argsIndex);
 
-                $this->assertTrue($ParsedSwitches->testHasSwitch('include'));
+                $this->assertTrue($parsed->switches->testHasSwitch('include'));
 
-                $switches = $ParsedSwitches->getSwitches();
+                $switches = $parsed->switches->getSwitches();
                 $this->assertEquals(4, count($switches));
                 // did we get the include switch?
                 $this->assertEquals('include', $switches['include']->name);
                 $this->assertEquals('/tmp', $switches['include']->values[0]);
                 // did we get both library switches?
-                $retrievedArgs = $ParsedSwitches->getArgsForSwitch('library');
+                $retrievedArgs = $parsed->switches->getArgsForSwitch('library');
                 $this->assertEquals(2, count($switches['library']->values));
                 $this->assertEquals('fred', $switches['library']->values[0]);
                 $this->assertEquals('harry', $switches['library']->values[1]);
@@ -344,21 +344,21 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 );
 
                 $parser = new CommandLineParser();
-                list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                $parsed = $parser->parseSwitches($argv, 1, $options);
 
                 // did it work?
-                $this->assertTrue ($ParsedSwitches instanceof ParsedSwitches);
+                $this->assertTrue ($parsed instanceof ParsedCommandLine);
 
                 // is the argsIndex pointing at the right place?
-                $this->assertTrue (is_int($argsIndex));
-                $this->assertEquals(3, $argsIndex);
+                $this->assertTrue (is_int($parsed->argsIndex));
+                $this->assertEquals(3, $parsed->argsIndex);
 
-                $this->assertTrue($ParsedSwitches->testHasSwitch('shortHelp'));
-                $this->assertTrue($ParsedSwitches->testHasSwitch('longHelp'));
+                $this->assertTrue($parsed->switches->testHasSwitch('shortHelp'));
+                $this->assertTrue($parsed->switches->testHasSwitch('longHelp'));
 
-                $switches = $ParsedSwitches->getSwitches();
+                $switches = $parsed->switches->getSwitches();
                 $this->assertEquals(4, count($switches));
-                
+
                 // did we get the include switch?
                 $this->assertEquals('shortHelp', $switches['shortHelp']->name);
                 $this->assertEquals('longHelp', $switches['longHelp']->name);
@@ -378,19 +378,19 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 );
 
                 $parser = new CommandLineParser();
-                list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                $parsed = $parser->parseSwitches($argv, 1, $options);
 
                 // did it work?
-                $this->assertTrue ($ParsedSwitches instanceof ParsedSwitches);
+                $this->assertTrue ($parsed instanceof ParsedCommandLine);
 
                 // is the argsIndex pointing at the right place?
-                $this->assertTrue (is_int($argsIndex));
-                $this->assertEquals(3, $argsIndex);
+                $this->assertTrue (is_int($parsed->argsIndex));
+                $this->assertEquals(3, $parsed->argsIndex);
 
-                $this->assertTrue($ParsedSwitches->testHasSwitch('shortHelp'));
-                $this->assertTrue($ParsedSwitches->testHasSwitch('version'));
+                $this->assertTrue($parsed->switches->testHasSwitch('shortHelp'));
+                $this->assertTrue($parsed->switches->testHasSwitch('version'));
 
-                $switches = $ParsedSwitches->getSwitchesByOrder();
+                $switches = $parsed->switches->getSwitchesByOrder();
                 $this->assertEquals(4, count($switches));
                 $this->assertEquals('version', $switches[0]->name);
                 $this->assertTrue($switches[0]->values[0]);
@@ -420,7 +420,7 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 try
                 {
                         $parser = new CommandLineParser();
-                        list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                        $parsed = $parser->parseSwitches($argv, 1, $options);
                 }
                 catch (\Exception $e)
                 {
@@ -447,7 +447,7 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 try
                 {
                         $parser = new CommandLineParser();
-                        list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                        $parsed = $parser->parseSwitches($argv, 1, $options);
                 }
                 catch (\Exception $e)
                 {
@@ -473,7 +473,7 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 try
                 {
                         $parser = new CommandLineParser();
-                        list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                        $parsed = $parser->parseSwitches($argv, 1, $options);
                 }
                 catch (\Exception $e)
                 {
@@ -500,7 +500,7 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 try
                 {
                         $parser = new CommandLineParser();
-                        list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                        $parsed = $parser->parseSwitches($argv, 1, $options);
                 }
                 catch (\Exception $e)
                 {
@@ -525,7 +525,7 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 try
                 {
                         $parser = new CommandLineParser();
-                        list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                        $parsed = $parser->parseSwitches($argv, 1, $options);
                 }
                 catch (\Exception $e)
                 {
@@ -552,7 +552,7 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 try
                 {
                         $parser = new CommandLineParser();
-                        list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                        $parsed = $parser->parseSwitches($argv, 1, $options);
                 }
                 catch (\Exception $e)
                 {
@@ -577,20 +577,20 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 );
 
                 $parser = new CommandLineParser();
-                list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                $parsed = $parser->parseSwitches($argv, 1, $options);
 
                 // did it work?
-                $this->assertTrue ($ParsedSwitches instanceof ParsedSwitches);
+                $this->assertTrue ($parsed instanceof ParsedCommandLine);
 
                 // is the argsIndex pointing at the right place?
-                $this->assertTrue (is_int($argsIndex));
-                $this->assertEquals(3, $argsIndex);
+                $this->assertTrue (is_int($parsed->argsIndex));
+                $this->assertEquals(3, $parsed->argsIndex);
 
-                $this->assertTrue($ParsedSwitches->testHasSwitch('shortHelp'));
-                $this->assertTrue($ParsedSwitches->testHasSwitch('version'));
-                $this->assertTrue($ParsedSwitches->testHasSwitch('include'));
+                $this->assertTrue($parsed->switches->testHasSwitch('shortHelp'));
+                $this->assertTrue($parsed->switches->testHasSwitch('version'));
+                $this->assertTrue($parsed->switches->testHasSwitch('include'));
 
-                $switches = $ParsedSwitches->getSwitchesByOrder();
+                $switches = $parsed->switches->getSwitchesByOrder();
                 $this->assertEquals(5, count($switches));
                 $this->assertEquals('version', $switches[0]->name);
                 $this->assertTrue($switches[0]->values[0]);
@@ -607,7 +607,7 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals('all', $switches[4]->values[0]);
                 $this->assertTrue($switches[4]->testIsDefaultValue());
         }
-        
+
         public function testCanLumpShortSwitchesTogetherWithLastOneHavingAOptionalArgument()
         {
                 $options = $this->setupOptions();
@@ -620,20 +620,20 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 );
 
                 $parser = new CommandLineParser();
-                list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                $parsed = $parser->parseSwitches($argv, 1, $options);
 
                 // did it work?
-                $this->assertTrue ($ParsedSwitches instanceof ParsedSwitches);
+                $this->assertTrue ($parsed instanceof ParsedCommandLine);
 
                 // is the argsIndex pointing at the right place?
-                $this->assertTrue (is_int($argsIndex));
-                $this->assertEquals(2, $argsIndex);
-                
-                $this->assertTrue($ParsedSwitches->testHasSwitch('shortHelp'));
-                $this->assertTrue($ParsedSwitches->testHasSwitch('version'));
-                $this->assertTrue($ParsedSwitches->testHasSwitch('warnings'));
+                $this->assertTrue (is_int($parsed->argsIndex));
+                $this->assertEquals(2, $parsed->argsIndex);
 
-                $switches = $ParsedSwitches->getSwitchesByOrder();
+                $this->assertTrue($parsed->switches->testHasSwitch('shortHelp'));
+                $this->assertTrue($parsed->switches->testHasSwitch('version'));
+                $this->assertTrue($parsed->switches->testHasSwitch('warnings'));
+
+                $switches = $parsed->switches->getSwitchesByOrder();
                 $this->assertEquals(4, count($switches));
                 $this->assertEquals('version', $switches[0]->name);
                 $this->assertTrue($switches[0]->values[0]);
@@ -660,18 +660,18 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 );
 
                 $parser = new CommandLineParser();
-                list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                $parsed = $parser->parseSwitches($argv, 1, $options);
 
                 // did it work?
-                $this->assertTrue ($ParsedSwitches instanceof ParsedSwitches);
+                $this->assertTrue ($parsed instanceof ParsedCommandLine);
 
                 // is the argsIndex pointing at the right place?
-                $this->assertTrue (is_int($argsIndex));
-                $this->assertEquals(2, $argsIndex);
+                $this->assertTrue (is_int($parsed->argsIndex));
+                $this->assertEquals(2, $parsed->argsIndex);
 
-                $this->assertTrue($ParsedSwitches->testHasSwitch('warnings'));
+                $this->assertTrue($parsed->switches->testHasSwitch('warnings'));
 
-                $switches = $ParsedSwitches->getSwitches();
+                $switches = $parsed->switches->getSwitches();
                 $this->assertEquals(2, count($switches));
                 $this->assertEquals('warnings', $switches['warnings']->name);
                 $this->assertEquals('all', $switches['warnings']->values[0]);
@@ -689,18 +689,18 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 );
 
                 $parser = new CommandLineParser();
-                list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                $parsed = $parser->parseSwitches($argv, 1, $options);
 
                 // did it work?
-                $this->assertTrue ($ParsedSwitches instanceof ParsedSwitches);
+                $this->assertTrue ($parsed instanceof ParsedCommandLine);
 
                 // is the argsIndex pointing at the right place?
-                $this->assertTrue (is_int($argsIndex));
-                $this->assertEquals(2, $argsIndex);
+                $this->assertTrue (is_int($parsed->argsIndex));
+                $this->assertEquals(2, $parsed->argsIndex);
 
-                $this->assertTrue($ParsedSwitches->testHasSwitch('warnings'));
+                $this->assertTrue($parsed->switches->testHasSwitch('warnings'));
 
-                $switches = $ParsedSwitches->getSwitches();
+                $switches = $parsed->switches->getSwitches();
                 $this->assertEquals(2, count($switches));
                 $this->assertEquals('warnings', $switches['warnings']->name);
                 $this->assertEquals('all', $switches['warnings']->values[0]);
@@ -717,20 +717,20 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 );
 
                 $parser = new CommandLineParser();
-                list($ParsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 1, $options);
+                $parsed = $parser->parseSwitches($argv, 1, $options);
 
                 // did it work?
-                $this->assertTrue ($ParsedSwitches instanceof ParsedSwitches);
+                $this->assertTrue ($parsed instanceof ParsedCommandLine);
 
                 // is the argsIndex pointing at the right place?
-                $this->assertTrue (is_int($argsIndex));
-                $this->assertEquals(1, $argsIndex);
+                $this->assertTrue (is_int($parsed->argsIndex));
+                $this->assertEquals(1, $parsed->argsIndex);
 
                 // what defaults have leeched through?
                 // it should only be the required switches that have
                 // default values
 
-                $switches = $ParsedSwitches->getSwitches();
+                $switches = $parsed->switches->getSwitches();
                 $this->assertTrue(is_array($switches));
                 $this->assertEquals(2, count($switches));
                 $this->assertTrue(isset($switches['warnings']));
@@ -772,17 +772,17 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                 );
 
                 $parser = new CommandLineParser();
-                list($parsedSwitches, $argsIndex) = $parser->parseSwitches($argv, 2, $options);
+                $parsed = $parser->parseSwitches($argv, 2, $options);
 
                 // did it work?
-                $this->assertTrue ($parsedSwitches instanceof ParsedSwitches);
+                $this->assertTrue ($parsed instanceof ParsedCommandLine);
 
                 // is the argsIndex pointing to the right place?
-                $this->assertTrue (is_int($argsIndex));
-                $this->assertEquals (2, $argsIndex);
+                $this->assertTrue (is_int($parsed->argsIndex));
+                $this->assertEquals (2, $parsed->argsIndex);
 
                 // are the defaults present?
-                $switches = $parsedSwitches->getSwitches();
+                $switches = $parsed->switches->getSwitches();
                 $this->assertTrue(is_array($switches));
                 $this->assertEquals(3, count($switches));
                 $this->assertTrue(isset($switches['properties']));

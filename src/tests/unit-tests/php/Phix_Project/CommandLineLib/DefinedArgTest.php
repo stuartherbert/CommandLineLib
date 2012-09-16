@@ -170,7 +170,7 @@ class DefinedArgTest extends \PHPUnit_Framework_TestCase
                 $this->assertTrue($obj->testMustValidateWith('Phix_Project\ValidationLib\MustBeWriteable'));
                 $this->assertFalse($obj->testMustValidateWith('Phix_Project\ValidationLib\MustBeValidFile'));
         }
-        
+
         public function testAnExceptionIsNotThrownIfValidatorClassDoesNotExist()
         {
                 $name = '<command>';

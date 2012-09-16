@@ -60,48 +60,53 @@ class CommandLineParser
          *
          * @param array $args
          *      The array of command-line arguments (normally $argv)
-         * @param int $argIndex
+         * @param int $argsIndex
          *      The current index inside $args to search from
          * @param DefinedSwitches $expectedOptions
          *      The list of command-line switches that we support
          * @return array(ParsedSwitches, int)
          *      The set of parsed command line switches, plus the new value
-         *      for $argIndex
+         *      for $argsIndex
          */
-        public function parseSwitches($args, $argIndex, DefinedSwitches $expectedOptions)
+        public function parseSwitches($args, $argsIndex, DefinedSwitches $expectedOptions)
         {
                 // catch programming errors
-                Contract::Preconditions(function() use ($args, $argIndex, $expectedOptions)
+                Contract::Preconditions(function() use ($args, $argsIndex, $expectedOptions)
                 {
                         Contract::RequiresValue($args, is_array($args), '$args must be array');
                         Contract::RequiresValue($args, count($args) > 0, '$args cannot be an empty array');
 
-                        Contract::RequiresValue($argIndex, is_integer($argIndex), '$argIndex must be an integer');
-                        Contract::RequiresValue($argIndex, count($args) >= $argIndex, '$argIndex cannot be more than +1 beyond the end of $args');
+                        Contract::RequiresValue($argsIndex, is_integer($argsIndex), '$argsIndex must be an integer');
+                        Contract::RequiresValue($argsIndex, count($args) >= $argsIndex, '$argsIndex cannot be more than +1 beyond the end of $args');
 
                         Contract::RequiresValue($expectedOptions, count($expectedOptions->getSwitches()) > 0, '$expectedOptions must have some switches defined');
                 });
 
-                // create our return values
+                // create our return value
+                $return = new ParsedCommandLine($args);
+
+                // create the container for switches that we have parsed
                 $parsedSwitches = new ParsedSwitches($expectedOptions);
+
+                // find out how many args there are in total
                 $argCount = count($args);
 
                 // var_dump($args);
 
                 // let's work through the args from left to right
                 $done = false;
-                while ($argIndex < $argCount && !$done)
+                while ($argsIndex < $argCount && !$done)
                 {
                         // are we looking at a switch or not?
-                        if ($args[$argIndex] == '--')
+                        if ($args[$argsIndex] == '--')
                         {
                                 // var_dump('Special case: --');
                                 // special case - end of switches
                                 // skip over it
-                                $argIndex++;
+                                $argsIndex++;
                                 $done = true;
                         }
-                        else if ($args[$argIndex]{0} !== '-')
+                        else if ($args[$argsIndex]{0} !== '-')
                         {
                                 // var_dump('Not a switch');
                                 // special case - end of switches
@@ -109,19 +114,19 @@ class CommandLineParser
                         }
                         // yes we are ... parse it
                         // is it a short switch or a long switch?
-                        else if ($args[$argIndex]{1} !== '-')
+                        else if ($args[$argsIndex]{1} !== '-')
                         {
                                 // var_dump('Parsing short switch');
-                                // var_dump('$argIndex is: ' . $argIndex);
+                                // var_dump('$argsIndex is: ' . $argsIndex);
                                 // it is a short switch
-                                $argIndex = $this->parseShortSwitch($args, $argIndex, $parsedSwitches, $expectedOptions);
-                                // var_dump('$argIndex is now: ' . $argIndex);
+                                $argsIndex = $this->parseShortSwitch($args, $argsIndex, $parsedSwitches, $expectedOptions);
+                                // var_dump('$argsIndex is now: ' . $argsIndex);
                         }
                         else
                         {
                                 // var_dump('Parsing long switch');
                                 // it is a long switch
-                                $argIndex = $this->parseLongSwitch($args, $argIndex, $parsedSwitches, $expectedOptions);
+                                $argsIndex = $this->parseLongSwitch($args, $argsIndex, $parsedSwitches, $expectedOptions);
                         }
                 }
 
@@ -137,7 +142,18 @@ class CommandLineParser
                         }
                 }
 
-                return array($parsedSwitches, $argIndex);
+                // all done on the parsing side
+                $return->switches  = $parsedSwitches;
+                $return->argsIndex = $argsIndex;
+
+                // now we need to validate the parsed switches
+                //
+                // we cannot do anything about the errors ... it has to be up
+                // to the caller to deal with them!
+                $return->errors = $return->switches->validateSwitchValues();
+
+                // all done
+                return $return;
         }
 
         /**
@@ -168,36 +184,36 @@ class CommandLineParser
          *
          * @param array $args
          *      The array of command-line arguments (normally $argv)
-         * @param int $argIndex
+         * @param int $argsIndex
          *      The current index inside $args to search from
          * @param ParsedSwitches $parsedSwitches
          *      The list of switches we have already parsed
          * @param DefinedSwitches $expectedOptions
          *      The list of command-line switches that we support
          * @return int
-         *      The new value for $argIndex
+         *      The new value for $argsIndex
          */
-        protected function parseShortSwitch($args, $argIndex, ParsedSwitches $parsedSwitches, DefinedSwitches $expectedOptions)
+        protected function parseShortSwitch($args, $argsIndex, ParsedSwitches $parsedSwitches, DefinedSwitches $expectedOptions)
         {
                 // catch programming errors
-                Contract::Preconditions(function() use ($args, $argIndex, $expectedOptions)
+                Contract::Preconditions(function() use ($args, $argsIndex, $expectedOptions)
                 {
                         Contract::RequiresValue($args, is_array($args), '$args must be array');
                         Contract::RequiresValue($args, count($args) > 0, '$args cannot be an empty array');
 
-                        Contract::RequiresValue($argIndex, is_integer($argIndex), '$argIndex must be an integer');
-                        Contract::RequiresValue($argIndex, count($args) > $argIndex, '$argIndex cannot be beyond the end of $args');
+                        Contract::RequiresValue($argsIndex, is_integer($argsIndex), '$argsIndex must be an integer');
+                        Contract::RequiresValue($argsIndex, count($args) > $argsIndex, '$argsIndex cannot be beyond the end of $args');
 
                         Contract::RequiresValue($expectedOptions, count($expectedOptions->getSwitches()) > 0, '$expectedOptions must have some switches defined');
                 });
 
-                // $args[$argIndex] contains one or more short switches,
+                // $args[$argsIndex] contains one or more short switches,
                 // which we expect to be defined in $expectedOptions
 
-                $switchStringLength = strlen($args[$argIndex]);
+                $switchStringLength = strlen($args[$argsIndex]);
                 for ($j = 1; $j < $switchStringLength; $j++)
                 {
-                        $shortSwitch = $args[$argIndex]{$j};
+                        $shortSwitch = $args[$argsIndex]{$j};
 
                         // is this a valid switch?
                         if (!$expectedOptions->testHasShortSwitch($shortSwitch))
@@ -220,14 +236,14 @@ class CommandLineParser
                                         // assume the rest of the string is the argument
                                         if ($j != $switchStringLength - 1)
                                         {
-                                                list($arg, $argIndex) = $this->parseArgument($args, $argIndex, 2, $switch, '-' . $shortSwitch);
+                                                list($arg, $argsIndex) = $this->parseArgument($args, $argsIndex, 2, $switch, '-' . $shortSwitch);
                                                 // we've finished with this string,
                                                 // so set $j to exit the loop
                                                 $j = $switchStringLength - 1;
                                         }
                                         else
                                         {
-                                                list($arg, $argIndex) = $this->parseArgument($args, $argIndex + 1, 0, $switch, '-' . $shortSwitch);
+                                                list($arg, $argsIndex) = $this->parseArgument($args, $argsIndex + 1, 0, $switch, '-' . $shortSwitch);
                                         }
                                 }
                                 else
@@ -240,7 +256,7 @@ class CommandLineParser
                                                 throw new \Exception('switch -' . $shortSwitch . ' expected argument');
                                         }
 
-                                        list($arg, $argIndex) = $this->parseArgument($args, $argIndex + 1, 0, $switch, '-' . $shortSwitch);
+                                        list($arg, $argsIndex) = $this->parseArgument($args, $argsIndex + 1, 0, $switch, '-' . $shortSwitch);
                                 }
                         }
 
@@ -249,10 +265,10 @@ class CommandLineParser
                 }
 
                 // increment our counter through the args
-                $argIndex++;
+                $argsIndex++;
 
                 // return the counter
-                return $argIndex;
+                return $argsIndex;
         }
 
         /**
@@ -275,39 +291,39 @@ class CommandLineParser
          *
          * @param array $args
          *      The array of command-line arguments (normally $argv)
-         * @param int $argIndex
+         * @param int $argsIndex
          *      The current index inside $args to search from
          * @param ParsedSwitches $parsedSwitches
          *      The list of switches that we have already parsed
          * @param DefinedSwitches $expectedOptions
          *      The list of command-line switches that we support
          * @return int
-         *      The new value of $argIndex
+         *      The new value of $argsIndex
          */
-        protected function parseLongSwitch($args, $argIndex, ParsedSwitches $parsedSwitches, DefinedSwitches $expectedOptions)
+        protected function parseLongSwitch($args, $argsIndex, ParsedSwitches $parsedSwitches, DefinedSwitches $expectedOptions)
         {
                 // catch programming errors
-                Contract::Preconditions(function() use ($args, $argIndex, $expectedOptions)
+                Contract::Preconditions(function() use ($args, $argsIndex, $expectedOptions)
                 {
                         Contract::RequiresValue($args, is_array($args), '$args must be array');
                         Contract::RequiresValue($args, count($args) > 0, '$args cannot be an empty array');
 
-                        Contract::RequiresValue($argIndex, is_integer($argIndex), '$argIndex must be an integer');
-                        Contract::RequiresValue($argIndex, count($args) > $argIndex, '$argIndex cannot be beyond the end of $args');
+                        Contract::RequiresValue($argsIndex, is_integer($argsIndex), '$argsIndex must be an integer');
+                        Contract::RequiresValue($argsIndex, count($args) > $argsIndex, '$argsIndex cannot be beyond the end of $args');
 
                         Contract::RequiresValue($expectedOptions, count($expectedOptions->getSwitches()) > 0, '$expectedOptions must have some switches defined');
                 });
 
                 // $args[i] contains a long switch, and might contain
                 // a parameter too
-                $equalsPos = strpos($args[$argIndex], '=');
+                $equalsPos = strpos($args[$argsIndex], '=');
                 if ($equalsPos !== false)
                 {
-                        $longSwitch = substr($args[$argIndex], 2, $equalsPos - 2);
+                        $longSwitch = substr($args[$argsIndex], 2, $equalsPos - 2);
                 }
                 else
                 {
-                        $longSwitch = substr($args[$argIndex], 2);
+                        $longSwitch = substr($args[$argsIndex], 2);
                 }
                 $arg = null;
 
@@ -327,22 +343,22 @@ class CommandLineParser
                         if ($equalsPos !== false)
                         {
                                 // yes we did
-                                list($arg, $argIndex) = $this->parseArgument($args, $argIndex, $equalsPos + 1, $switch, '--' . $longSwitch);
+                                list($arg, $argsIndex) = $this->parseArgument($args, $argsIndex, $equalsPos + 1, $switch, '--' . $longSwitch);
                         }
                         else
                         {
                                 // no we did not; it might be next
-                                list($arg, $argIndex) = $this->parseArgument($args, $argIndex + 1, 0, $switch, '--' . $longSwitch);
+                                list($arg, $argsIndex) = $this->parseArgument($args, $argsIndex + 1, 0, $switch, '--' . $longSwitch);
                         }
                 }
 
                 // increment to the next item in the list
-                $argIndex++;
+                $argsIndex++;
 
                 $parsedSwitches->addSwitch($expectedOptions, $switch->name, $arg);
 
                 // all done
-                return $argIndex;
+                return $argsIndex;
         }
 
         /**
@@ -351,36 +367,36 @@ class CommandLineParser
          *
          * @param array $args
          *      The array of command-line arguments (normally $argv)
-         * @param int $argIndex
+         * @param int $argsIndex
          *      The current index inside $args to search from.
          *      This may be just beyond the end of the command-line args
          *      if the last command-line argument is a switch.
          * @param int $startFrom
-         *      The offset inside $args[$argIndex] where the argument string
+         *      The offset inside $args[$argsIndex] where the argument string
          *      starts
          * @param DefinedSwitch $switch
          *      The command-line switch that may need an argument
          * @param string $switchSeen
          *      The actual switch we found on the command-line
          * @return array(string, int)
-         *      The argument we have parsed, plus the new value of $argIndex
+         *      The argument we have parsed, plus the new value of $argsIndex
          */
-        protected function parseArgument($args, $argIndex, $startFrom, DefinedSwitch $switch, $switchSeen)
+        protected function parseArgument($args, $argsIndex, $startFrom, DefinedSwitch $switch, $switchSeen)
         {
                 // catch programming errors
-                Contract::Preconditions(function() use ($args, $argIndex, $startFrom, $switchSeen)
+                Contract::Preconditions(function() use ($args, $argsIndex, $startFrom, $switchSeen)
                 {
                         Contract::RequiresValue($args, is_array($args), '$args must be array');
                         Contract::RequiresValue($args, count($args) > 0, '$args cannot be an empty array');
 
-                        Contract::RequiresValue($argIndex, is_integer($argIndex), '$argIndex must be an integer');
-                        Contract::RequiresValue($argIndex, count($args) >= $argIndex, '$argIndex cannot be more than +1 beyond the end of $args');
+                        Contract::RequiresValue($argsIndex, is_integer($argsIndex), '$argsIndex must be an integer');
+                        Contract::RequiresValue($argsIndex, count($args) >= $argsIndex, '$argsIndex cannot be more than +1 beyond the end of $args');
 
                         // this is a conditional test because it is legal
-                        // for $args[$argindex] to be unset()
-                        if (isset($args[$argIndex]))
+                        // for $args[$argsIndex] to be unset()
+                        if (isset($args[$argsIndex]))
                         {
-                                Contract::RequiresValue($startFrom, $startFrom <= strlen($args[$argIndex]), '$startFrom cannot be more than +1 beyond the end of $args[$argIndex]');
+                                Contract::RequiresValue($startFrom, $startFrom <= strlen($args[$argsIndex]), '$startFrom cannot be more than +1 beyond the end of $args[$argsIndex]');
                         }
 
                         Contract::RequiresValue($switchSeen, is_string($switchSeen), '$switchSeen must be a string');
@@ -395,22 +411,22 @@ class CommandLineParser
                 {
                         // it is optional ... but is
                         // it there?
-                        if (isset($args[$argIndex]))
+                        if (isset($args[$argsIndex]))
                         {
                                 // yes it is
-                                $arg = substr($args[$argIndex], $startFrom);
+                                $arg = substr($args[$argsIndex], $startFrom);
                         }
                         else
                         {
                                 $arg = $switch->arg->defaultValue;
-                                $argIndex--;
+                                $argsIndex--;
                         }
                 }
                 else
                 {
                         // argument is required ... but
                         // is it there?
-                        if (!isset($args[$argIndex]))
+                        if (!isset($args[$argsIndex]))
                         {
                                 // no it is not
                                 // error!
@@ -418,7 +434,7 @@ class CommandLineParser
                         }
 
                         // yes it is
-                        $arg = substr($args[$argIndex], $startFrom);
+                        $arg = substr($args[$argsIndex], $startFrom);
 
                         // did we get an argument?
                         if (strlen(trim($arg)) == 0)
@@ -428,6 +444,6 @@ class CommandLineParser
                         }
                 }
 
-                return array($arg, $argIndex);
+                return array($arg, $argsIndex);
         }
 }
