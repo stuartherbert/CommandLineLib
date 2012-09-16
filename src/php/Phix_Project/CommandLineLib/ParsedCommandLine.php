@@ -50,18 +50,6 @@ namespace Phix_Project\CommandLineLib;
 class ParsedCommandLine
 {
         /**
-         * the full command-line
-         * @var array
-         */
-        public $argv;
-
-        /**
-         * the index of the first unparsed element in $argv
-         * @var integer
-         */
-        public $argIndex;
-
-        /**
          * a list of all of the command-line switches we have parsed
          * @var ParsedSwitches
          */
@@ -75,11 +63,9 @@ class ParsedCommandLine
         public $errors;
 
         /**
-         * constructor.
-         * @param array $argv the full command-line
+         * the rest of the command-line, the stuff left over at the end of
+         * all of the switches
+         * @var array
          */
-        public function __construct($argv)
-        {
-                $this->argv = $argv;
-        }
+        public $args;
 }

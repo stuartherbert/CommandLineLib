@@ -68,7 +68,7 @@ class CommandLineParser
          *      The set of parsed command line switches, plus the new value
          *      for $argsIndex
          */
-        public function parseSwitches($args, $argsIndex, DefinedSwitches $expectedOptions)
+        public function parseCommandLine($args, $argsIndex, DefinedSwitches $expectedOptions)
         {
                 // catch programming errors
                 Contract::Preconditions(function() use ($args, $argsIndex, $expectedOptions)
@@ -83,9 +83,9 @@ class CommandLineParser
                 });
 
                 // create our return value
-                $return = new ParsedCommandLine($args);
+                $return = new ParsedCommandLine();
 
-                // create the container for switches that we have parsed
+                // create the container for switches that we will parse
                 $parsedSwitches = new ParsedSwitches($expectedOptions);
 
                 // find out how many args there are in total
@@ -144,7 +144,7 @@ class CommandLineParser
 
                 // all done on the parsing side
                 $return->switches  = $parsedSwitches;
-                $return->argsIndex = $argsIndex;
+                $return->args      = array_slice($args, $argsIndex, count($argsIndex));
 
                 // now we need to validate the parsed switches
                 //
