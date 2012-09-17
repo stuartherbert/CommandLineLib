@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2011 Stuart Herbert.
+ * Copyright (c) 2011-present Stuart Herbert.
  * Copyright (c) 2010 Gradwell dot com Ltd.
  * All rights reserved.
  *
@@ -37,7 +37,7 @@
  * @package     Phix_Project
  * @subpackage  CommandLineLib
  * @author      Stuart Herbert <stuart@stuartherbert.com>
- * @copyright   2011 Stuart Herbert. www.stuartherbert.com
+ * @copyright   2011-present Stuart Herbert. www.stuartherbert.com
  * @copyright   2010 Gradwell dot com Ltd. www.gradwell.com
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://www.phix-project.org
@@ -46,10 +46,11 @@
 
 namespace Phix_Project\CommandLineLib;
 
-use Phix_Project\ValidationLib\MustBeString;
-use Phix_Project\ValidationLib\MustBeInteger;
+use PHPUnit_Framework_TestCase;
+use Phix_Project\ValidationLib\Type_MustBeString;
+use Phix_Project\ValidationLib\Type_MustBeInteger;
 
-class ParsedSwitchesTest extends \PHPUnit_Framework_TestCase
+class ParsedSwitchesTest extends PHPUnit_Framework_TestCase
 {
         public function testCanAddSwitch()
         {
@@ -304,11 +305,11 @@ class ParsedSwitchesTest extends \PHPUnit_Framework_TestCase
                 $expectedOptions = new DefinedSwitches();
                 $switch1 = $expectedOptions->addSwitch('fred', 'desc 1')
                          ->setWithOptionalArg("<fish>", 'the fish that fred likes most')
-                         ->setArgValidator(new MustBeString());
+                         ->setArgValidator(new Type_MustBeString());
 
                 $switch2 = $expectedOptions->addSwitch('harry', 'desc 2')
                          ->setWithOptionalArg('<sauce>', 'the sauce that harry likes most')
-                         ->setArgValidator(new MustBeInteger());
+                         ->setArgValidator(new Type_MustBeInteger());
 
                 // add the parsed results
                 $parsedSwitches = new ParsedSwitches();

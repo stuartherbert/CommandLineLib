@@ -53,28 +53,28 @@ class ParsedSwitch
 {
         /**
          * The full definition for this switch
-         * 
+         *
          * @var DefinedSwitch
          */
         public $definition = null;
 
         /**
          * The name of this switch
-         * 
+         *
          * @var string
          */
         public $name = null;
-        
+
         /**
          * Any arguments that have been passed to this switch
-         * 
+         *
          * @var array
          */
         public $values  = array();
 
         /**
          * How many times this switch has been seen on the command-line
-         * 
+         *
          * @var int
          */
         public $invokes = 0;
@@ -83,15 +83,15 @@ class ParsedSwitch
          * For switches with optional arguments, are we using the argument's
          * default value (because the argument wasn't supplied on the
          * command line)?
-         * 
+         *
          * @var boolean
          */
         public $isUsingDefaultValue = false;
 
         /**
          * Constructor
-         * 
-         * @param DefinedSwitch $switch 
+         *
+         * @param DefinedSwitch $switch
          */
         public function __construct(DefinedSwitch $switch)
         {
@@ -111,8 +111,8 @@ class ParsedSwitch
         /**
          * Add an argument's value to the list that the parser has seen
          * for this switch on the command-line
-         * 
-         * @param string $value 
+         *
+         * @param string $value
          */
         public function addValue($value)
         {
@@ -128,12 +128,12 @@ class ParsedSwitch
         {
                 $this->isUsingDefaultValue = true;
         }
-        
+
         /**
          * Run the switch's argument's validators against the list of
          * values that the command-line parser found earlier
-         * 
-         * @return array 
+         *
+         * @return array
          *      a list of error messages
          *      this list is empty if the validators all pass
          */
@@ -151,10 +151,10 @@ class ParsedSwitch
                 // are all the arguments valid?
                 foreach ($this->values as $value)
                 {
-                        $errors = $this->definition->arg->testIsValid($value);
-                        if (count($errors) > 0)
+                        $result = $this->definition->arg->testIsValid($value);
+                        if ($result->hasErrors())
                         {
-                                $return = array_merge($return, $errors);
+                                $return = array_merge($return, $result->getErrors());
                         }
                 }
 
@@ -164,11 +164,11 @@ class ParsedSwitch
 
         /**
          * Get the first value seen for this switch
-         * 
+         *
          * This is a helper method for those switches that cannot be
          * repeated on the command-line (and therefore, cannot have more
          * than one parsed value)
-         * 
+         *
          * @return string
          */
         public function getFirstValue()
@@ -180,11 +180,11 @@ class ParsedSwitch
 
                 return null;
         }
-        
+
         /**
          * Is this switch's argument using the default value, from the
          * switch's argument's definition?
-         * 
+         *
          * @return boolean
          */
         public function testIsDefaultValue()

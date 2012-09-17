@@ -46,11 +46,13 @@
 
 namespace Phix_Project\CommandLineLib;
 
-use Phix_Project\ValidationLib\MustBeValidFile;
-use Phix_Project\ValidationLib\MustBeWriteable;
-use Phix_Project\ValidationLib\MustBeValidPath;
+use PHPUnit_Framework_TestCase;
 
-class CommandLineParserTest extends \PHPUnit_Framework_TestCase
+use Phix_Project\ValidationLib\File_MustBeValidFile;
+use Phix_Project\ValidationLib\File_MustBeWriteable;
+use Phix_Project\ValidationLib\File_MustBeValidPath;
+
+class CommandLineParserTest extends PHPUnit_Framework_TestCase
 {
         /**
          *
@@ -748,22 +750,22 @@ class CommandLineParserTest extends \PHPUnit_Framework_TestCase
                         ->setWithLongSwitch('build.properties')
                         ->setWithRequiredArg('<build.properties>', 'the path to the build.properties file to use')
                         ->setArgHasDefaultValueOf('build.properties')
-                        ->setArgValidator(new MustBeValidFile());
+                        ->setArgValidator(new File_MustBeValidFile());
 
                 $options->addSwitch('packageXml', 'specify the package.xml file to expand')
                         ->setWithShortSwitch('p')
                         ->setWithLongSwitch('packageXml')
                         ->setwithRequiredArg('<package.xml>', 'the path to the package.xml file to use')
                         ->setArgHasDefaultValueOf('.build/package.xml')
-                        ->setArgValidator(new MustBeValidFile())
-                        ->setArgValidator(new MustBeWriteable());
+                        ->setArgValidator(new File_MustBeValidFile())
+                        ->setArgValidator(new File_MustBeWriteable());
 
                 $options->addSwitch('srcFolder', 'specify the src folder to feed into package.xml')
                         ->setWithShortSwitch('s')
                         ->setWithLongSwitch('src')
                         ->setWithRequiredArg('<folder>', 'the path to the folder where the package source files are')
                         ->setArgHasDefaultValueOf('src')
-                        ->setArgValidator(new MustBeValidPath());
+                        ->setArgValidator(new File_MustBeValidPath());
 
                 $argv = array
                 (

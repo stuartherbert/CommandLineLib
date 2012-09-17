@@ -46,8 +46,8 @@
 
 namespace Phix_Project\CommandLineLib;
 
-use Phix_Project\ValidationLib\MustBeWriteable;
-use Phix_Project\ValidationLib\MustBeValidPath;
+use Phix_Project\ValidationLib\File_MustBeWriteable;
+use Phix_Project\ValidationLib\File_MustBeValidPath;
 
 class DefinedSwitchTest extends \PHPUnit_Framework_TestCase
 {
@@ -366,10 +366,10 @@ class DefinedSwitchTest extends \PHPUnit_Framework_TestCase
                 $obj->setWithShortSwitch($shortSwitch)
                     ->setWithRequiredArg($argName, $argDesc)
                     ->setArgHasDefaultValueOf('trout')
-                    ->setArgValidator(new MustBeWriteable());
+                    ->setArgValidator(new File_MustBeWriteable());
 
                 // did it work?
-                $this->assertTrue($obj->arg->testMustValidateWith('Phix_Project\ValidationLib\MustBeWriteable'));
+                $this->assertTrue($obj->arg->testMustValidateWith('Phix_Project\ValidationLib\File_MustBeWriteable'));
         }
 
         public function testCanTestForOptionalArguments()
@@ -415,7 +415,7 @@ class DefinedSwitchTest extends \PHPUnit_Framework_TestCase
                 $caughtException = false;
                 try
                 {
-                        $obj->setArgValidator(new MustBeValidPath());
+                        $obj->setArgValidator(new File_MustBeValidPath());
                 }
                 catch (\Exception $e)
                 {
@@ -443,7 +443,7 @@ class DefinedSwitchTest extends \PHPUnit_Framework_TestCase
                     ->setWithShortSwitch('I')
                     ->setWithLongSwitch('include')
                     ->setWithRequiredArg('<path>', 'The path to the folder to include')
-                    ->setArgValidator(new MustBeValidPath())
+                    ->setArgValidator(new File_MustBeValidPath())
                     ->setSwitchIsRepeatable();
 
                 $desc = $obj->getHumanReadableSwitchList();

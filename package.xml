@@ -54,8 +54,8 @@ ${contents}
       <package>
         <name>ValidationLib</name>
         <channel>pear.phix-project.org</channel>
-        <min>3.0.0</min>
-        <max>3.999.9999</max>
+        <min>4.0.0</min>
+        <max>4.999.9999</max>
       </package>
     </required>
   </dependencies>

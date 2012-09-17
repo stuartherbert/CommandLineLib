@@ -17,7 +17,7 @@
  *     the documentation and/or other materials provided with the
  *     distribution.
  *
- *   * Neither the names of the copyright holders nor the names of the 
+ *   * Neither the names of the copyright holders nor the names of the
  *     contributors may be used to endorse or promote products derived
  *     from this software without specific prior written permission.
  *
@@ -46,10 +46,11 @@
 
 namespace Phix_Project\CommandLineLib;
 
-use Phix_Project\ValidationLib\MustBeString;
-use Phix_Project\ValidationLib\MustBeInteger;
+use PHPUnit_Framework_TestCase;
+use Phix_Project\ValidationLib\Type_MustBeString;
+use Phix_Project\ValidationLib\Type_MustBeInteger;
 
-class ParsedSwitchTest extends \PHPUnit_Framework_TestCase
+class ParsedSwitchTest extends PHPUnit_Framework_TestCase
 {
         public function testCanCreate()
         {
@@ -219,7 +220,7 @@ class ParsedSwitchTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($def->name, $name);
                 $this->assertEquals($def->desc, $desc);
                 $def->setWithRequiredArg('harry', 'harry does love his food');
-                $def->setArgValidator(new MustBeString());
+                $def->setArgValidator(new Type_MustBeString());
 
                 // now, we use the definition to create
                 // the ParsedSwitch
@@ -244,7 +245,7 @@ class ParsedSwitchTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($def->name, $name);
                 $this->assertEquals($def->desc, $desc);
                 $def->setWithRequiredArg('harry', 'harry does love his food');
-                $def->setArgValidator(new MustBeInteger());
+                $def->setArgValidator(new Type_MustBeInteger());
 
                 // now, we use the definition to create
                 // the ParsedSwitch
