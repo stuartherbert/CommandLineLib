@@ -77,8 +77,6 @@ class CommandLineParser
 
                         Contract::RequiresValue($argsIndex, is_integer($argsIndex), '$argsIndex must be an integer');
                         Contract::RequiresValue($argsIndex, count($args) >= $argsIndex, '$argsIndex cannot be more than +1 beyond the end of $args');
-
-                        Contract::RequiresValue($expectedOptions, count($expectedOptions->getSwitches()) > 0, '$expectedOptions must have some switches defined');
                 });
 
                 // create our return value
