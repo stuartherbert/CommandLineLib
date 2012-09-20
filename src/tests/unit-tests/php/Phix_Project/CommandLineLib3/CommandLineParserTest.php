@@ -108,6 +108,32 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertTrue(true);
         }
 
+        public function testCanParseZeroArgs()
+        {
+                $options = $this->setupOptions();
+                $this->assertTrue($options instanceof DefinedSwitches);
+
+                $argv = array();
+
+                $parser = new CommandLineParser();
+                $parsed = $parser->parseCommandLine($argv, 0, $options);
+
+                // did it work?
+                $this->assertTrue ($parsed instanceof ParsedCommandLine);
+                $this->assertTrue ($parsed->switches instanceof ParsedSwitches);
+
+                // do we have the right number of left-over args?
+                $this->assertTrue (is_array($parsed->args));
+                $this->assertEquals(array(), $parsed->args);
+
+                // do we have the right number of switches?
+                // we should have just the switches with default values
+                $switches = $parsed->switches->getSwitches();
+                $this->assertEquals(2, count($switches));
+                $this->assertTrue(isset($switches['warnings']));
+                $this->assertTrue(isset($switches['srcFolder']));
+        }
+
         public function testCanParseShortSwitches()
         {
                 $options = $this->setupOptions();

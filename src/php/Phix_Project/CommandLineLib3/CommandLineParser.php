@@ -74,7 +74,6 @@ class CommandLineParser
                 Contract::Preconditions(function() use ($args, $argsIndex, $expectedOptions)
                 {
                         Contract::RequiresValue($args, is_array($args), '$args must be array');
-                        Contract::RequiresValue($args, count($args) > 0, '$args cannot be an empty array');
 
                         Contract::RequiresValue($argsIndex, is_integer($argsIndex), '$argsIndex must be an integer');
                         Contract::RequiresValue($argsIndex, count($args) >= $argsIndex, '$argsIndex cannot be more than +1 beyond the end of $args');
