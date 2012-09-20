@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2011 Stuart Herbert.
+ * Copyright (c) 2011-present Stuart Herbert.
  * Copyright (c) 2010 Gradwell dot com Ltd.
  * All rights reserved.
  *
@@ -35,18 +35,21 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package     Phix_Project
- * @subpackage  CommandLineLib
+ * @subpackage  CommandLineLib3
  * @author      Stuart Herbert <stuart@stuartherbert.com>
- * @copyright   2011 Stuart Herbert. www.stuartherbert.com
+ * @copyright   2011-present Stuart Herbert. www.stuartherbert.com
  * @copyright   2010 Gradwell dot com Ltd. www.gradwell.com
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://www.phix-project.org
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib;
+namespace Phix_Project\CommandLineLib3;
 
-class DefinedSwitchesTest extends \PHPUnit_Framework_TestCase
+use Exception;
+use PHPUnit_Framework_TestCase;
+
+class DefinedSwitchesTest extends PHPUnit_Framework_TestCase
 {
         public function testCanCreateOptions()
         {
@@ -90,7 +93,7 @@ class DefinedSwitchesTest extends \PHPUnit_Framework_TestCase
                 {
                         $retrievedSwitch = $obj->getSwitchByName($notASwitchName);
                 }
-                catch (\Exception $e)
+                catch (Exception $e)
                 {
                         $caughtException = true;
                 }
@@ -124,7 +127,7 @@ class DefinedSwitchesTest extends \PHPUnit_Framework_TestCase
                 {
                         $retrievedSwitch = $obj->getShortSwitch('v');
                 }
-                catch (\Exception $e)
+                catch (Exception $e)
                 {
                         $caughtException = true;
                 }
@@ -158,7 +161,7 @@ class DefinedSwitchesTest extends \PHPUnit_Framework_TestCase
                 {
                         $retrievedSwitch = $obj->getLongSwitch($notASwitchName);
                 }
-                catch (\Exception $e)
+                catch (Exception $e)
                 {
                         $caughtException = true;
                 }
@@ -308,7 +311,7 @@ class DefinedSwitchesTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals($expectedOrder, $actualOrder);
 
                 // finally, the list of all switches
-                // 
+                //
                 // do we have the expected structure back?
                 $this->assertTrue(isset($switches['allSwitches']));
 

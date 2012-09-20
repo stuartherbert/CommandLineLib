@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2011 Stuart Herbert.
+ * Copyright (c) 2011-present Stuart Herbert.
  * Copyright (c) 2010 Gradwell dot com Ltd.
  * All rights reserved.
  *
@@ -35,7 +35,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package     Phix_Project
- * @subpackage  CommandLineLib
+ * @subpackage  CommandLineLib3
  * @author      Stuart Herbert <stuart@stuartherbert.com>
  * @copyright   2011 Stuart Herbert. www.stuartherbert.com
  * @copyright   2010 Gradwell dot com Ltd. www.gradwell.com
@@ -44,7 +44,7 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib;
+namespace Phix_Project\CommandLineLib3;
 
 /**
  * Represents a switch that has been parsed from the command-line

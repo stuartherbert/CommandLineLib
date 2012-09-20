@@ -35,7 +35,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package     Phix_Project
- * @subpackage  CommandLineLib
+ * @subpackage  CommandLineLib3
  * @author      Stuart Herbert <stuart@stuartherbert.com>
  * @copyright   2011-present Stuart Herbert. www.stuartherbert.com
  * @copyright   2010 Gradwell dot com Ltd. www.gradwell.com
@@ -44,11 +44,11 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib;
+namespace Phix_Project\CommandLineLib3;
 
 use PHPUnit_Framework_TestCase;
-use Phix_Project\ValidationLib\Type_MustBeString;
-use Phix_Project\ValidationLib\Type_MustBeInteger;
+use Phix_Project\ValidationLib4\Type_MustBeString;
+use Phix_Project\ValidationLib4\Type_MustBeInteger;
 
 class ParsedSwitchesTest extends PHPUnit_Framework_TestCase
 {

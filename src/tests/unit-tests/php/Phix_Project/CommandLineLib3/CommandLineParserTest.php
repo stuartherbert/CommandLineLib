@@ -35,7 +35,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package     Phix_Project
- * @subpackage  CommandLineLib
+ * @subpackage  CommandLineLib3
  * @author      Stuart Herbert <stuart@stuartherbert.com>
  * @copyright   2011-present Stuart Herbert. www.stuartherbert.com
  * @copyright   2010 Gradwell dot com Ltd. www.gradwell.com
@@ -44,13 +44,14 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib;
+namespace Phix_Project\CommandLineLib3;
 
+use Exception;
 use PHPUnit_Framework_TestCase;
 
-use Phix_Project\ValidationLib\File_MustBeValidFile;
-use Phix_Project\ValidationLib\File_MustBeWriteable;
-use Phix_Project\ValidationLib\File_MustBeValidPath;
+use Phix_Project\ValidationLib4\File_MustBeValidFile;
+use Phix_Project\ValidationLib4\File_MustBeWriteable;
+use Phix_Project\ValidationLib4\File_MustBeValidPath;
 
 class CommandLineParserTest extends PHPUnit_Framework_TestCase
 {
@@ -424,7 +425,7 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                         $parser = new CommandLineParser();
                         $parsed = $parser->parseCommandLine($argv, 1, $options);
                 }
-                catch (\Exception $e)
+                catch (Exception $e)
                 {
                         $caughtException = true;
                 }
@@ -451,7 +452,7 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                         $parser = new CommandLineParser();
                         $parsed = $parser->parseCommandLine($argv, 1, $options);
                 }
-                catch (\Exception $e)
+                catch (Exception $e)
                 {
                         $caughtException = true;
                 }
@@ -477,7 +478,7 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                         $parser = new CommandLineParser();
                         $parsed = $parser->parseCommandLine($argv, 1, $options);
                 }
-                catch (\Exception $e)
+                catch (Exception $e)
                 {
                         $caughtException = true;
                         $this->assertEquals("switch -I expected argument", $e->getMessage());
@@ -504,7 +505,7 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                         $parser = new CommandLineParser();
                         $parsed = $parser->parseCommandLine($argv, 1, $options);
                 }
-                catch (\Exception $e)
+                catch (Exception $e)
                 {
                         $caughtException = true;
                         $this->assertEquals("switch --include expected argument", $e->getMessage());
@@ -529,7 +530,7 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                         $parser = new CommandLineParser();
                         $parsed = $parser->parseCommandLine($argv, 1, $options);
                 }
-                catch (\Exception $e)
+                catch (Exception $e)
                 {
                         $caughtException = true;
                         $this->assertEquals("switch --include expected argument", $e->getMessage());
@@ -556,7 +557,7 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                         $parser = new CommandLineParser();
                         $parsed = $parser->parseCommandLine($argv, 1, $options);
                 }
-                catch (\Exception $e)
+                catch (Exception $e)
                 {
                         $caughtException = true;
                         $this->assertEquals("switch -I expected argument", $e->getMessage());

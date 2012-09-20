@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2011 Stuart Herbert.
+ * Copyright (c) 2011-present Stuart Herbert.
  * Copyright (c) 2010 Gradwell dot com Ltd.
  * All rights reserved.
  *
@@ -35,21 +35,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package     Phix
- * @subpackage  CommandLineLib
+ * @subpackage  CommandLineLib3
  * @author      Stuart Herbert <stuart@stuartherbert.com>
- * @copyright   2011 Stuart Herbert. www.stuartherbert.com
+ * @copyright   2011-present Stuart Herbert. www.stuartherbert.com
  * @copyright   2010 Gradwell dot com Ltd. www.gradwell.com
  * @license     http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link        http://www.phix-project.org
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib;
+namespace Phix_Project\CommandLineLib3;
 
-use Phix_Project\ValidationLib\File_MustBeWriteable;
-use Phix_Project\ValidationLib\File_MustBeValidPath;
+use Exception;
+use PHPUnit_Framework_TestCase;
+use Phix_Project\ValidationLib4\File_MustBeWriteable;
+use Phix_Project\ValidationLib4\File_MustBeValidPath;
 
-class DefinedSwitchTest extends \PHPUnit_Framework_TestCase
+class DefinedSwitchTest extends PHPUnit_Framework_TestCase
 {
         public function testCanCreateDefinedSwitch()
         {
@@ -111,7 +113,7 @@ class DefinedSwitchTest extends \PHPUnit_Framework_TestCase
                         {
                                 $obj->setWithShortSwitch($shortSwitch);
                         }
-                        catch (\Exception $e)
+                        catch (Exception $e)
                         {
                                 $hasAsserted = true;
                         }
@@ -200,7 +202,7 @@ class DefinedSwitchTest extends \PHPUnit_Framework_TestCase
                         {
                                 $obj->setWithlongSwitch($longSwitch);
                         }
-                        catch (\Exception $e)
+                        catch (Exception $e)
                         {
                                 $hasAsserted = true;
                         }
@@ -369,7 +371,7 @@ class DefinedSwitchTest extends \PHPUnit_Framework_TestCase
                     ->setArgValidator(new File_MustBeWriteable());
 
                 // did it work?
-                $this->assertTrue($obj->arg->testMustValidateWith('Phix_Project\ValidationLib\File_MustBeWriteable'));
+                $this->assertTrue($obj->arg->testMustValidateWith('Phix_Project\ValidationLib4\File_MustBeWriteable'));
         }
 
         public function testCanTestForOptionalArguments()
@@ -406,7 +408,7 @@ class DefinedSwitchTest extends \PHPUnit_Framework_TestCase
                 {
                         $obj->setArgHasDefaultValueOf(0);
                 }
-                catch (\Exception $e)
+                catch (Exception $e)
                 {
                         $caughtException = true;
                 }
@@ -417,7 +419,7 @@ class DefinedSwitchTest extends \PHPUnit_Framework_TestCase
                 {
                         $obj->setArgValidator(new File_MustBeValidPath());
                 }
-                catch (\Exception $e)
+                catch (Exception $e)
                 {
                         $caughtException = true;
                 }

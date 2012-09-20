@@ -35,7 +35,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package     Phix_Project
- * @subpackage  CommandLineLib
+ * @subpackage  CommandLineLib3
  * @author      Stuart Herbert <stuart@stuartherbert.com>
  * @copyright   2011-present Stuart Herbert. www.stuartherbert.com
  * @copyright   2010 Gradwell dot com Ltd. www.gradwell.com
@@ -44,11 +44,11 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib;
+namespace Phix_Project\CommandLineLib3;
 
-use Phix_Project\ContractLib\Contract;
-use Phix_Project\ValidationLib\Validator;
-use Phix_Project\ValidationLib\ValidationList;
+use Phix_Project\ContractLib2\Contract;
+use Phix_Project\ValidationLib4\Validator;
+use Phix_Project\ValidationLib4\ValidationList;
 
 /**
  * Represents the definition of a single argument for a single switch
