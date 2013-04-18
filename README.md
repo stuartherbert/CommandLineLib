@@ -1,29 +1,29 @@
-CommandLineLib
-==============
+CommandLineLib3
+===============
 
-**CommandLineLib** is a simple-to-use PHP component that provides a high-quality command line parser via a fluid interface.
+**CommandLineLib3** is a simple-to-use PHP component that provides a high-quality command line parser via a fluid interface.
 
 System-Wide Installation
 ------------------------
 
-CommandLineLib should be installed using the [PEAR Installer](http://pear.php.net). This installer is the PHP community's de-facto standard for installing PHP components.
+CommandLineLib3 should be installed using the [PEAR Installer](http://pear.php.net). This installer is the PHP community's de-facto standard for installing PHP components.
 
     sudo pear channel-discover pear.phix-project.org
-    sudo pear install --alldeps phix/CommandLineLib
+    sudo pear install --alldeps phix/CommandLineLib3
 
 As A Dependency On Your Component
 ---------------------------------
 
-If you are creating a component that relies on CommandLineLib, please make sure that you add CommandLineLib to your component's package.xml file:
+If you are creating a component that relies on CommandLineLib3, please make sure that you add CommandLineLib to your component's package.xml file:
 
 ```xml
 <dependencies>
   <required>
     <package>
-      <name>CommandLineLib</name>
+      <name>CommandLineLib3</name>
       <channel>pear.phix-project.org</channel>
-      <min>2.0.0</min>
-      <max>2.999.9999</max>
+      <min>3.0.0</min>
+      <max>3.999.9999</max>
     </package>
   </required>
 </dependencies>
@@ -32,7 +32,7 @@ If you are creating a component that relies on CommandLineLib, please make sure 
 Usage
 -----
 
-The best documentation for CommandLineLib are the unit tests, which are shipped in the package.  You will find them installed into your PEAR repository, which on Linux systems is normally /usr/share/php/test.
+The best documentation for CommandLineLib3 are the unit tests, which are shipped in the package.  You will find them installed into your PEAR repository, which on Linux systems is normally /usr/share/php/test.
 
 Development Environment
 -----------------------
@@ -47,7 +47,7 @@ If you want to patch or enhance this component, you will need to create a suitab
 
 You can then clone the git repository:
 
-    # CommandLineLib
+    # CommandLineLib3
     git clone git://github.com/stuartherbert/CommandLineLib.git
 
 Then, install a local copy of this component's dependencies to complete the development environment:
