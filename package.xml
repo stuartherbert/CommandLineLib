@@ -4,7 +4,7 @@
   <channel>pear.phix-project.org</channel>
   <summary>A simple-to-use command line parser</summary>
   <description>
-    CommandLineLib is a simple-to-use PHP component that provides a high-quality command line parser via a fluid interface.
+    CommandLineLib is a simple-to-use PHP component that provides a high-quality command line parser via a fluent interface.
   </description>
   <lead>
     <name>Stuart Herbert</name>
