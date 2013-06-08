@@ -44,7 +44,7 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib3;
+namespace Phix_Project\CommandLineLib4;
 
 use Phix_Project\ValidationLib4\Validator;
 use Phix_Project\ContractLib2\Contract;
@@ -169,7 +169,7 @@ class DefinedSwitch
          * @param string $switch
          * @return DefinedSwitch
          */
-        public function setWithShortSwitch($switch)
+        public function addShortSwitch($switch)
         {
                 // catch programming errors
                 Contract::PreConditions(function() use ($switch)
@@ -196,7 +196,7 @@ class DefinedSwitch
          * @param string $switch
          * @return DefinedSwitch
          */
-        public function setWithLongSwitch($switch)
+        public function addLongSwitch($switch)
         {
                 // catch programming errors
                 Contract::PreConditions(function() use ($switch)
@@ -223,7 +223,7 @@ class DefinedSwitch
          * @param string $argDesc the argument's description
          * @return DefinedSwitch
          */
-        public function setWithOptionalArg($argName, $argDesc)
+        public function setOptionalArg($argName, $argDesc)
         {
                 // catch programming errors
                 Contract::PreConditions(function() use ($argName, $argDesc)
@@ -247,7 +247,7 @@ class DefinedSwitch
          * @param string $argDesc the argument's description
          * @return DefinedSwitch
          */
-        public function setWithRequiredArg($argName, $argDesc)
+        public function setRequiredArg($argName, $argDesc)
         {
                 // catch programming errors
                 Contract::PreConditions(function() use ($argName, $argDesc)

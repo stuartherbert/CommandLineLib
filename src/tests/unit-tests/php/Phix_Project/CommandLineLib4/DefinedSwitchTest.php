@@ -44,7 +44,7 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib3;
+namespace Phix_Project\CommandLineLib4;
 
 use Exception;
 use PHPUnit_Framework_TestCase;
@@ -70,7 +70,7 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                 $shortSwitch = 'h';
 
                 $obj = new DefinedSwitch($name, $desc);
-                $obj->setWithShortSwitch($shortSwitch);
+                $obj->addShortSwitch($shortSwitch);
 
                 // has it worked?
                 $this->assertEquals($obj->name, $name);
@@ -87,7 +87,7 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                 $obj = new DefinedSwitch($name, $desc);
                 foreach ($shortSwitches as $shortSwitch)
                 {
-                        $obj->setWithShortSwitch($shortSwitch);
+                        $obj->addShortSwitch($shortSwitch);
                 }
 
                 // has it worked?
@@ -111,7 +111,7 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                         $hasAsserted = false;
                         try
                         {
-                                $obj->setWithShortSwitch($shortSwitch);
+                                $obj->addShortSwitch($shortSwitch);
                         }
                         catch (Exception $e)
                         {
@@ -129,7 +129,7 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                 $shortSwitch = 'h';
 
                 $obj = new DefinedSwitch($name, $desc);
-                $obj->setWithShortSwitch($shortSwitch);
+                $obj->addShortSwitch($shortSwitch);
 
                 // has it worked?
                 $this->assertEquals($obj->name, $name);
@@ -144,7 +144,7 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                 $shortSwitch = 'h';
 
                 $obj = new DefinedSwitch($name, $desc);
-                $obj->setWithShortSwitch($shortSwitch);
+                $obj->addShortSwitch($shortSwitch);
 
                 // has it worked?
                 $this->assertEquals($obj->name, $name);
@@ -159,7 +159,7 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                 $longSwitch = 'help';
 
                 $obj = new DefinedSwitch($name, $desc);
-                $obj->setWithLongSwitch($longSwitch);
+                $obj->addLongSwitch($longSwitch);
 
                 // has it worked?
                 $this->assertEquals($obj->name, $name);
@@ -176,7 +176,7 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                 $obj = new DefinedSwitch($name, $desc);
                 foreach ($longSwitches as $longSwitch)
                 {
-                        $obj->setWithlongSwitch($longSwitch);
+                        $obj->addLongSwitch($longSwitch);
                 }
 
                 // has it worked?
@@ -200,7 +200,7 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                         $hasAsserted = false;
                         try
                         {
-                                $obj->setWithlongSwitch($longSwitch);
+                                $obj->addLongSwitch($longSwitch);
                         }
                         catch (Exception $e)
                         {
@@ -218,7 +218,7 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                 $longSwitch = 'help';
 
                 $obj = new DefinedSwitch($name, $desc);
-                $obj->setWithLongSwitch($longSwitch);
+                $obj->addLongSwitch($longSwitch);
 
                 // has it worked?
                 $this->assertEquals($obj->name, $name);
@@ -233,7 +233,7 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                 $longSwitch = 'help';
 
                 $obj = new DefinedSwitch($name, $desc);
-                $obj->setWithLongSwitch($longSwitch);
+                $obj->addLongSwitch($longSwitch);
 
                 // has it worked?
                 $this->assertEquals($obj->name, $name);
@@ -251,11 +251,11 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                 $obj = new DefinedSwitch($name, $desc);
                 foreach ($shortSwitches as $shortSwitch)
                 {
-                        $obj->setWithShortSwitch($shortSwitch);
+                        $obj->addShortSwitch($shortSwitch);
                 }
                 foreach ($longSwitches as $longSwitch)
                 {
-                        $obj->setWithlongSwitch($longSwitch);
+                        $obj->addLongSwitch($longSwitch);
                 }
 
                 // has it worked?
@@ -278,7 +278,7 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                 $shortSwitch = 'h';
 
                 $obj = new DefinedSwitch($name, $desc);
-                $obj->setWithShortSwitch($shortSwitch);
+                $obj->addShortSwitch($shortSwitch);
 
                 // has it worked?
                 $this->assertEquals($obj->name, $name);
@@ -300,8 +300,8 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                 $argDesc = 'The <command> you want help with';
 
                 $obj = new DefinedSwitch($name, $desc);
-                $obj->setWithShortSwitch($shortSwitch)
-                    ->setWithOptionalArg($argName, $argDesc);
+                $obj->addShortSwitch($shortSwitch)
+                    ->setOptionalArg($argName, $argDesc);
 
                 // has it worked?
                 $this->assertEquals($obj->name, $name);
@@ -321,8 +321,8 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                 $argDesc = 'The <command> you want help with';
 
                 $obj = new DefinedSwitch($name, $desc);
-                $obj->setWithShortSwitch($shortSwitch)
-                    ->setWithRequiredArg($argName, $argDesc);
+                $obj->addShortSwitch($shortSwitch)
+                    ->setRequiredArg($argName, $argDesc);
 
                 // has it worked?
                 $this->assertEquals($obj->name, $name);
@@ -342,8 +342,8 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                 $argDesc = 'The <command> you want help with';
 
                 $obj = new DefinedSwitch($name, $desc);
-                $obj->setWithShortSwitch($shortSwitch)
-                    ->setWithRequiredArg($argName, $argDesc)
+                $obj->addShortSwitch($shortSwitch)
+                    ->setRequiredArg($argName, $argDesc)
                     ->setArgHasDefaultValueOf('trout');
 
                 // has it worked?
@@ -365,8 +365,8 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                 $argDesc = 'The <command> you want help with';
 
                 $obj = new DefinedSwitch($name, $desc);
-                $obj->setWithShortSwitch($shortSwitch)
-                    ->setWithRequiredArg($argName, $argDesc)
+                $obj->addShortSwitch($shortSwitch)
+                    ->setRequiredArg($argName, $argDesc)
                     ->setArgHasDefaultValueOf('trout')
                     ->setArgValidator(new File_MustBeWriteable());
 
@@ -381,7 +381,7 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                 $shortSwitch = 'h';
 
                 $obj = new DefinedSwitch($name, $desc);
-                $obj->setWithShortSwitch($shortSwitch);
+                $obj->addShortSwitch($shortSwitch);
 
                 $this->assertEquals($obj->name, $name);
                 $this->assertEquals($obj->desc, $desc);
@@ -401,7 +401,7 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                 $shortSwitch = 'h';
 
                 $obj = new DefinedSwitch($name, $desc);
-                $obj->setWithShortSwitch($shortSwitch);
+                $obj->addShortSwitch($shortSwitch);
 
                 $caughtException = false;
                 try
@@ -442,9 +442,9 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
                                   . \PHP_EOL . \PHP_EOL
                                   . "If your class lives in the './myApp/lib/Me/Tools' folder, you would call Phix "
                                   . "with 'Phix --include=./myApp/lib'")
-                    ->setWithShortSwitch('I')
-                    ->setWithLongSwitch('include')
-                    ->setWithRequiredArg('<path>', 'The path to the folder to include')
+                    ->addShortSwitch('I')
+                    ->addLongSwitch('include')
+                    ->setRequiredArg('<path>', 'The path to the folder to include')
                     ->setArgValidator(new File_MustBeValidPath())
                     ->setSwitchIsRepeatable();
 

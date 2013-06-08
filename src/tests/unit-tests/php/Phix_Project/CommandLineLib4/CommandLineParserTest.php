@@ -44,7 +44,7 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib3;
+namespace Phix_Project\CommandLineLib4;
 
 use Exception;
 use PHPUnit_Framework_TestCase;
@@ -63,39 +63,39 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
         {
                 $options = new DefinedSwitches();
 
-                $options->addSwitch('shortHelp', 'display this help message')
-                        ->setWithShortSwitch('h')
-                        ->setWithShortSwitch('?');
+                $options->newSwitch('shortHelp', 'display this help message')
+                        ->addShortSwitch('h')
+                        ->addShortSwitch('?');
 
-                $options->addSwitch('longHelp', 'display full help message')
-                        ->setWithLongSwitch('help')
-                        ->setWithLongSwitch('?');
+                $options->newSwitch('longHelp', 'display full help message')
+                        ->addLongSwitch('help')
+                        ->addLongSwitch('?');
 
-                $options->addSwitch('version', 'display app version number')
-                        ->setWithShortSwitch('v')
-                        ->setWithLongSwitch('version');
+                $options->newSwitch('version', 'display app version number')
+                        ->addShortSwitch('v')
+                        ->addLongSwitch('version');
 
-                $options->addSwitch('include', 'add a folder to search within')
-                        ->setWithShortSwitch('I')
-                        ->setWithLongSwitch('include')
-                        ->setWithRequiredArg('<path>', 'path to the folder to search');
+                $options->newSwitch('include', 'add a folder to search within')
+                        ->addShortSwitch('I')
+                        ->addLongSwitch('include')
+                        ->setRequiredArg('<path>', 'path to the folder to search');
 
-                $options->addSwitch('library', 'add a library to link against')
-                        ->setWithShortSwitch('l')
-                        ->setWithLongSwitch('lib')
-                        ->setWithRequiredArg('<lib>', 'the name of a library to link against')
+                $options->newSwitch('library', 'add a library to link against')
+                        ->addShortSwitch('l')
+                        ->addLongSwitch('lib')
+                        ->setRequiredArg('<lib>', 'the name of a library to link against')
                         ->setSwitchIsRepeatable();
 
-                $options->addSwitch('srcFolder', 'add a folder to load source code from')
-                        ->setWithShortSwitch('s')
-                        ->setWithLongSwitch('srcFolder')
-                        ->setWithRequiredArg('<srcFolder>', 'path to the folder to load source code from')
+                $options->newSwitch('srcFolder', 'add a folder to load source code from')
+                        ->addShortSwitch('s')
+                        ->addLongSwitch('srcFolder')
+                        ->setRequiredArg('<srcFolder>', 'path to the folder to load source code from')
                         ->setArgHasDefaultValueOf('/usr/bin/php');
 
-                $options->addSwitch('warnings', 'enable warnings')
-                        ->setWithShortSwitch('W')
-                        ->setWithLongSwitch('warnings')
-                        ->setWithOptionalArg('<warnings>', 'comma-separated list of warnings to enable')
+                $options->newSwitch('warnings', 'enable warnings')
+                        ->addShortSwitch('W')
+                        ->addLongSwitch('warnings')
+                        ->setOptionalArg('<warnings>', 'comma-separated list of warnings to enable')
                         ->setArgHasDefaultValueOf('all')
                         ->setSwitchIsRepeatable();
 
@@ -772,25 +772,25 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 // is the code necessary to reproduce the faults
                 $options = new DefinedSwitches();
 
-                $options->addSwitch('properties', 'specify the build.properties file to use')
-                        ->setWithShortSwitch('b')
-                        ->setWithLongSwitch('build.properties')
-                        ->setWithRequiredArg('<build.properties>', 'the path to the build.properties file to use')
+                $options->newSwitch('properties', 'specify the build.properties file to use')
+                        ->addShortSwitch('b')
+                        ->addLongSwitch('build.properties')
+                        ->setRequiredArg('<build.properties>', 'the path to the build.properties file to use')
                         ->setArgHasDefaultValueOf('build.properties')
                         ->setArgValidator(new File_MustBeValidFile());
 
-                $options->addSwitch('packageXml', 'specify the package.xml file to expand')
-                        ->setWithShortSwitch('p')
-                        ->setWithLongSwitch('packageXml')
-                        ->setwithRequiredArg('<package.xml>', 'the path to the package.xml file to use')
+                $options->newSwitch('packageXml', 'specify the package.xml file to expand')
+                        ->addShortSwitch('p')
+                        ->addLongSwitch('packageXml')
+                        ->setRequiredArg('<package.xml>', 'the path to the package.xml file to use')
                         ->setArgHasDefaultValueOf('.build/package.xml')
                         ->setArgValidator(new File_MustBeValidFile())
                         ->setArgValidator(new File_MustBeWriteable());
 
-                $options->addSwitch('srcFolder', 'specify the src folder to feed into package.xml')
-                        ->setWithShortSwitch('s')
-                        ->setWithLongSwitch('src')
-                        ->setWithRequiredArg('<folder>', 'the path to the folder where the package source files are')
+                $options->newSwitch('srcFolder', 'specify the src folder to feed into package.xml')
+                        ->addShortSwitch('s')
+                        ->addLongSwitch('src')
+                        ->setRequiredArg('<folder>', 'the path to the folder where the package source files are')
                         ->setArgHasDefaultValueOf('src')
                         ->setArgValidator(new File_MustBeValidPath());
 

@@ -1,6 +1,6 @@
 {
-	"name": "phix/commandlinelib3",
-	"description": "commandlinelib3 provides a high-quality command line parser via a fluent interface",
+	"name": "phix/commandlinelib4",
+	"description": "commandlinelib4 provides a high-quality command line parser via a fluent interface",
 	"keywords": [
 		"args parser",
 		"getopt"

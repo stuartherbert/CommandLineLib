@@ -44,7 +44,7 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib3;
+namespace Phix_Project\CommandLineLib4;
 
 use PHPUnit_Framework_TestCase;
 

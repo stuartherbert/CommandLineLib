@@ -44,7 +44,7 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib3;
+namespace Phix_Project\CommandLineLib4;
 
 use Phix_Project\ContractLib2\Contract;
 use Phix_Project\ValidationLib4\Validator;

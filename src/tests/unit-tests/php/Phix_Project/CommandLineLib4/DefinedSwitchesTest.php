@@ -44,7 +44,7 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib3;
+namespace Phix_Project\CommandLineLib4;
 
 use Exception;
 use PHPUnit_Framework_TestCase;
@@ -63,8 +63,8 @@ class DefinedSwitchesTest extends PHPUnit_Framework_TestCase
                 $switchDesc = 'Display this help message';
 
                 $obj = new DefinedSwitches();
-                $origSwitch = $obj->addSwitch($switchName, $switchDesc);
-                $origSwitch->setWithShortSwitch('h');
+                $origSwitch = $obj->newSwitch($switchName, $switchDesc);
+                $origSwitch->addShortSwitch('h');
 
                 // did it work?
                 $this->assertTrue($obj->testHasSwitchByName($switchName));
@@ -76,8 +76,8 @@ class DefinedSwitchesTest extends PHPUnit_Framework_TestCase
                 $switchDesc = 'Display this help message';
 
                 $obj = new DefinedSwitches();
-                $origSwitch = $obj->addSwitch($switchName, $switchDesc);
-                $origSwitch->setWithShortSwitch('h');
+                $origSwitch = $obj->newSwitch($switchName, $switchDesc);
+                $origSwitch->addShortSwitch('h');
 
                 // did it work?
                 $this->assertTrue($obj->testHasSwitchByName($switchName));
@@ -106,9 +106,9 @@ class DefinedSwitchesTest extends PHPUnit_Framework_TestCase
                 $switchDesc = 'Display this help message';
 
                 $obj = new DefinedSwitches();
-                $origSwitch = $obj->addSwitch($switchName, $switchDesc);
-                $origSwitch->setWithShortSwitch('h')
-                           ->setWithShortSwitch('?');
+                $origSwitch = $obj->newSwitch($switchName, $switchDesc);
+                $origSwitch->addShortSwitch('h')
+                           ->addShortSwitch('?');
 
                 // did it work?
                 $this->assertTrue($obj->testHasSwitchByName($switchName));
@@ -140,9 +140,9 @@ class DefinedSwitchesTest extends PHPUnit_Framework_TestCase
                 $switchDesc = 'Display this help message';
 
                 $obj = new DefinedSwitches();
-                $origSwitch = $obj->addSwitch($switchName, $switchDesc);
-                $origSwitch->setWithLongSwitch('help')
-                           ->setWithLongSwitch('?');
+                $origSwitch = $obj->newSwitch($switchName, $switchDesc);
+                $origSwitch->addLongSwitch('help')
+                           ->addLongSwitch('?');
 
                 // did it work?
                 $this->assertTrue($obj->testHasSwitchByName($switchName));
@@ -174,11 +174,11 @@ class DefinedSwitchesTest extends PHPUnit_Framework_TestCase
                 $switchDesc = 'Display this help message';
 
                 $obj = new DefinedSwitches();
-                $origSwitch = $obj->addSwitch($switchName, $switchDesc);
-                $origSwitch->setWithShortSwitch('h')
-                           ->setWithShortSwitch('?')
-                           ->setWithLongSwitch('help')
-                           ->setWithLongSwitch('?');
+                $origSwitch = $obj->newSwitch($switchName, $switchDesc);
+                $origSwitch->addShortSwitch('h')
+                           ->addShortSwitch('?')
+                           ->addLongSwitch('help')
+                           ->addLongSwitch('?');
 
                 // did it work?
                 $this->assertTrue($obj->testHasSwitchByName($switchName));
@@ -202,20 +202,20 @@ class DefinedSwitchesTest extends PHPUnit_Framework_TestCase
                 $switch1Desc = 'Display this help message';
 
                 $obj = new DefinedSwitches();
-                $switch1 = $obj->addSwitch($switch1Name, $switch1Desc);
-                $switch1->setWithShortSwitch('h')
-                        ->setWithShortSwitch('?')
-                        ->setWithLongSwitch('help')
-                        ->setWithLongSwitch('?');
+                $switch1 = $obj->newSwitch($switch1Name, $switch1Desc);
+                $switch1->addShortSwitch('h')
+                        ->addShortSwitch('?')
+                        ->addLongSwitch('help')
+                        ->addLongSwitch('?');
 
                 $switch2Name = 'version';
                 $switch2Desc = 'Display the version number of this app';
 
-                $switch2 = $obj->addSwitch($switch2Name, $switch2Desc);
-                $switch2->setWithShortSwitch('v')
-                        ->setWithShortSwitch('?')
-                        ->setWithLongSwitch('?')
-                        ->setWithLongSwitch('version');
+                $switch2 = $obj->newSwitch($switch2Name, $switch2Desc);
+                $switch2->addShortSwitch('v')
+                        ->addShortSwitch('?')
+                        ->addLongSwitch('?')
+                        ->addLongSwitch('version');
 
                 // did it work?
                 $switches = $obj->getSwitches();
@@ -233,37 +233,37 @@ class DefinedSwitchesTest extends PHPUnit_Framework_TestCase
         {
                 $options = new DefinedSwitches();
 
-                $options->addSwitch('version', 'show the version number')
-                        ->setWithShortSwitch('v')
-                        ->setWithLongSwitch('version');
+                $options->newSwitch('version', 'show the version number')
+                        ->addShortSwitch('v')
+                        ->addLongSwitch('version');
 
-                $options->addSwitch('properties', 'specify the build.properties file to use')
-                        ->setWithShortSwitch('b')
-                        ->setWithLongSwitch('build.properties')
-                        ->setWithRequiredArg('<build.properties>', 'the path to the build.properties file to use')
+                $options->newSwitch('properties', 'specify the build.properties file to use')
+                        ->addShortSwitch('b')
+                        ->addLongSwitch('build.properties')
+                        ->setRequiredArg('<build.properties>', 'the path to the build.properties file to use')
                         ->setArgHasDefaultValueOf('build.properties');
 
-                $options->addSwitch('packageXml', 'specify the package.xml file to expand')
-                        ->setWithShortSwitch('p')
-                        ->setWithLongSwitch('packageXml')
-                        ->setwithRequiredArg('<package.xml>', 'the path to the package.xml file to use')
+                $options->newSwitch('packageXml', 'specify the package.xml file to expand')
+                        ->addShortSwitch('p')
+                        ->addLongSwitch('packageXml')
+                        ->setRequiredArg('<package.xml>', 'the path to the package.xml file to use')
                         ->setArgHasDefaultValueOf('.build/package.xml');
 
-                $options->addSwitch('srcFolder', 'specify the src folder to feed into package.xml')
-                        ->setWithShortSwitch('s')
-                        ->setWithLongSwitch('src')
-                        ->setWithRequiredArg('<folder>', 'the path to the folder where the package source files are')
+                $options->newSwitch('srcFolder', 'specify the src folder to feed into package.xml')
+                        ->addShortSwitch('s')
+                        ->addLongSwitch('src')
+                        ->setRequiredArg('<folder>', 'the path to the folder where the package source files are')
                         ->setArgHasDefaultValueOf('src');
 
-                $options->addSwitch('help', 'displays a summary of how to use this command')
-                        ->setWithShortSwitch('h')
-                        ->setWithShortSwitch('?')
-                        ->setWithLongSwitch('help');
+                $options->newSwitch('help', 'displays a summary of how to use this command')
+                        ->addShortSwitch('h')
+                        ->addShortSwitch('?')
+                        ->addLongSwitch('help');
 
-                $options->addSwitch('include', 'adds additional folders to PHP include_path')
-                        ->setWithShortSwitch('I')
-                        ->setWithLongSwitch('include')
-                        ->setWithRequiredArg('<path>', 'path to add to include_path')
+                $options->newSwitch('include', 'adds additional folders to PHP include_path')
+                        ->addShortSwitch('I')
+                        ->addLongSwitch('include')
+                        ->setRequiredArg('<path>', 'path to add to include_path')
                         ->setLongDesc("phix finds all of its commands by searching PHP's include_path for PHP files in "
                                        . "folders called 'PhixCommands'. If you want to phix to look in other folders "
                                        . "without having to add them to PHP's include_path, use --include to tell phix "

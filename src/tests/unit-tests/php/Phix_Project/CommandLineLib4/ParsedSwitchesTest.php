@@ -44,7 +44,7 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib3;
+namespace Phix_Project\CommandLineLib4;
 
 use PHPUnit_Framework_TestCase;
 use Phix_Project\ValidationLib4\Type_MustBeString;
@@ -52,7 +52,7 @@ use Phix_Project\ValidationLib4\Type_MustBeInteger;
 
 class ParsedSwitchesTest extends PHPUnit_Framework_TestCase
 {
-        public function testCanAddSwitch()
+        public function testCannewSwitch()
         {
                 // define the options we are expecting
                 $expectedOptions = new DefinedSwitches();
@@ -60,7 +60,7 @@ class ParsedSwitchesTest extends PHPUnit_Framework_TestCase
                 // create the switch to add
                 $switchName = 'fred';
                 $switchDesc = 'trout';
-                $expectedOptions->addSwitch($switchName, $switchDesc);
+                $expectedOptions->newSwitch($switchName, $switchDesc);
 
                 // create the ParsedSwitches object
                 $parsedSwitches = new ParsedSwitches();
@@ -91,7 +91,7 @@ class ParsedSwitchesTest extends PHPUnit_Framework_TestCase
                 // create the switch to add
                 $switchName = 'fred';
                 $switchDesc = 'trout';
-                $expectedOptions->addSwitch($switchName, $switchDesc);
+                $expectedOptions->newSwitch($switchName, $switchDesc);
 
                 // create the ParsedSwitches object
                 $parsedSwitches = new ParsedSwitches($expectedOptions);
@@ -112,12 +112,12 @@ class ParsedSwitchesTest extends PHPUnit_Framework_TestCase
                 // create the switches to add
                 $switchName1 = 'fred';
                 $switchDesc1 = 'trout';
-                $expectedOptions->addSwitch($switchName1, $switchDesc1);
+                $expectedOptions->newSwitch($switchName1, $switchDesc1);
                 $switch1 = $expectedOptions->getSwitchByName($switchName1);
 
                 $switchName2 = 'harry';
                 $switchDesc2 = 'salmon';
-                $expectedOptions->addSwitch($switchName2, $switchDesc2);
+                $expectedOptions->newSwitch($switchName2, $switchDesc2);
                 $switch2 = $expectedOptions->getSwitchByName($switchName2);
 
                 // create the ParsedSwitches object
@@ -155,8 +155,8 @@ class ParsedSwitchesTest extends PHPUnit_Framework_TestCase
                 // define the options we are expecting
                 $expectedOptions = new DefinedSwitches();
 
-                $expectedOptions->addSwitch('fred', 'trout')
-                                ->setWithOptionalArg('<fish>', 'which kind of fish you like');
+                $expectedOptions->newSwitch('fred', 'trout')
+                                ->setOptionalArg('<fish>', 'which kind of fish you like');
 
                 $parsedSwitches = new ParsedSwitches();
                 $parsedSwitches->addSwitch($expectedOptions, 'fred', 'salmon');
@@ -175,8 +175,8 @@ class ParsedSwitchesTest extends PHPUnit_Framework_TestCase
                 // define the options we are expecting
                 $expectedOptions = new DefinedSwitches();
 
-                $expectedOptions->addSwitch('fred', 'trout')
-                                ->setWithOptionalArg('<fish>', 'which kind of fish you like');
+                $expectedOptions->newSwitch('fred', 'trout')
+                                ->setOptionalArg('<fish>', 'which kind of fish you like');
 
                 $parsedSwitches = new ParsedSwitches();
                 $parsedSwitches->addSwitch($expectedOptions, 'fred', 'salmon');
@@ -193,8 +193,8 @@ class ParsedSwitchesTest extends PHPUnit_Framework_TestCase
                 // define the options we are expecting
                 $expectedOptions = new DefinedSwitches();
 
-                $expectedOptions->addSwitch('fred', 'trout')
-                                ->setWithOptionalArg('<fish>', 'which kind of fish you like');
+                $expectedOptions->newSwitch('fred', 'trout')
+                                ->setOptionalArg('<fish>', 'which kind of fish you like');
 
                 $parsedSwitches = new ParsedSwitches();
                 $parsedSwitches->addSwitch($expectedOptions, 'fred');
@@ -214,12 +214,12 @@ class ParsedSwitchesTest extends PHPUnit_Framework_TestCase
                 // create the switches to add
                 $switchName1 = 'fred';
                 $switchDesc1 = 'trout';
-                $expectedOptions->addSwitch($switchName1, $switchDesc1);
+                $expectedOptions->newSwitch($switchName1, $switchDesc1);
                 $switch1 = $expectedOptions->getSwitchByName($switchName1);
 
                 $switchName2 = 'harry';
                 $switchDesc2 = 'salmon';
-                $expectedOptions->addSwitch($switchName2, $switchDesc2);
+                $expectedOptions->newSwitch($switchName2, $switchDesc2);
                 $switch2 = $expectedOptions->getSwitchByName($switchName2);
 
                 // create the ParsedSwitches object
@@ -242,7 +242,7 @@ class ParsedSwitchesTest extends PHPUnit_Framework_TestCase
                 // create the switch to add
                 $switchName = 'fred';
                 $switchDesc = 'trout';
-                $expectedOptions->addSwitch($switchName, $switchDesc);
+                $expectedOptions->newSwitch($switchName, $switchDesc);
 
                 // create the ParsedSwitches object
                 $parsedSwitches = new ParsedSwitches($expectedOptions);
@@ -268,7 +268,7 @@ class ParsedSwitchesTest extends PHPUnit_Framework_TestCase
                 // create the switch to add
                 $switchName = 'fred';
                 $switchDesc = 'trout';
-                $expectedOptions->addSwitch($switchName, $switchDesc);
+                $expectedOptions->newSwitch($switchName, $switchDesc);
 
                 $args = array
                 (
@@ -303,12 +303,12 @@ class ParsedSwitchesTest extends PHPUnit_Framework_TestCase
         {
                 // define the options we are expecting
                 $expectedOptions = new DefinedSwitches();
-                $switch1 = $expectedOptions->addSwitch('fred', 'desc 1')
-                         ->setWithOptionalArg("<fish>", 'the fish that fred likes most')
+                $switch1 = $expectedOptions->newSwitch('fred', 'desc 1')
+                         ->setOptionalArg("<fish>", 'the fish that fred likes most')
                          ->setArgValidator(new Type_MustBeString());
 
-                $switch2 = $expectedOptions->addSwitch('harry', 'desc 2')
-                         ->setWithOptionalArg('<sauce>', 'the sauce that harry likes most')
+                $switch2 = $expectedOptions->newSwitch('harry', 'desc 2')
+                         ->setOptionalArg('<sauce>', 'the sauce that harry likes most')
                          ->setArgValidator(new Type_MustBeInteger());
 
                 // add the parsed results

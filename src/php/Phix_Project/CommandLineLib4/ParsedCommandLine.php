@@ -42,7 +42,7 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib3;
+namespace Phix_Project\CommandLineLib4;
 
 /**
  * Container for all of the switches parsed by the command-line parser
