@@ -70,7 +70,7 @@ PSR0_Autoloader::startAutoloading();
 
 // we want to start with an empty search path, to catch any missing
 // dependencies
-Autoloader_Path::emptySearchList();
+// Autoloader_Path::emptySearchList();
 
 // search inside the vendor/ folder
 PHIX_USING_COMPOSER || Autoloader_Path::searchFirst(PHIX_PEAR_VENDOR_DIR);
