@@ -109,7 +109,7 @@ class DefinedSwitch
         /**
          * The argument (if any) that this switch expects
          *
-         * @var DefinedArg
+         * @var Phix_Project\CommandLineLib4\DefinedArg
          */
         public $arg = null;
 
