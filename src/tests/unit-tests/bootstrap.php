@@ -80,3 +80,9 @@ Autoloader_Path::searchFirst(PHIX_TESTDIR);
 
 // search inside our src/php/ folder
 PHIX_USING_COMPOSER || Autoloader_Path::searchFirst(PHIX_SRCDIR);
+
+// step 4: switch on our Contracts, if present
+if (class_exists('Phix_Project\ContractLib2\Contract'))
+{
+	Phix_Project\ContractLib2\Contract::EnforceWrappedContracts();
+}
