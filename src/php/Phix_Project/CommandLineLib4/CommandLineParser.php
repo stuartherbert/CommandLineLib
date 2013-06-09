@@ -141,7 +141,7 @@ class CommandLineParser
 
                 // all done on the parsing side
                 $return->switches  = $parsedSwitches->getSwitches();
-                $return->args      = array_slice($args, $argsIndex, count($argsIndex));
+                $return->args      = array_slice($args, $argsIndex);
 
                 // we need to validate the parsed switches
                 //
