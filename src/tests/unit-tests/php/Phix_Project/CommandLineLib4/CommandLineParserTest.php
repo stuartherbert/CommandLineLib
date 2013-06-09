@@ -120,7 +120,7 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
 
                 // did it work?
                 $this->assertTrue ($parsed instanceof ParsedCommandLine);
-                $this->assertTrue ($parsed->switches instanceof ParsedSwitches);
+                $this->assertTrue (is_array($parsed->switches));
 
                 // do we have the right number of left-over args?
                 $this->assertTrue (is_array($parsed->args));
@@ -128,10 +128,12 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
 
                 // do we have the right number of switches?
                 // we should have just the switches with default values
-                $switches = $parsed->switches->getSwitches();
+                $switches = $parsed->switches;
                 $this->assertEquals(2, count($switches));
-                $this->assertTrue(isset($switches['warnings']));
-                $this->assertTrue(isset($switches['srcFolder']));
+                $this->assertEquals('srcFolder', $switches[0]->name);
+                $this->assertTrue($switches[0]->testIsDefaultValue());
+                $this->assertEquals('warnings', $switches[1]->name);
+                $this->assertTrue($switches[1]->testIsDefaultValue());
         }
 
         public function testCanParseShortSwitches()
@@ -156,10 +158,7 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertTrue (is_array($parsed->args));
                 $this->assertEquals(array("help"), $parsed->args);
 
-                $this->assertTrue($parsed->switches->testHasSwitch('shortHelp'));
-                $this->assertTrue($parsed->switches->testHasSwitch('version'));
-
-                $switches = $parsed->switches->getSwitchesByOrder();
+                $switches = $parsed->switches;
                 $this->assertEquals(4, count($switches));
                 $this->assertEquals('version', $switches[0]->name);
                 $this->assertTrue($switches[0]->values[0]);
@@ -196,11 +195,10 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertTrue (is_array($parsed->args));
                 $this->assertEquals(array("help"), $parsed->args);
 
-                $this->assertTrue($parsed->switches->testHasSwitch('include'));
-                $switches = $parsed->switches->getSwitches();
-                $this->assertTrue(isset($switches['include']));
-                $this->assertEquals('include', $switches['include']->name);
-                $this->assertEquals('/tmp', $switches['include']->getFirstValue());
+                $switches = $parsed->switches;
+                $this->assertTrue(isset($switches[0]));
+                $this->assertEquals('include', $switches[0]->name);
+                $this->assertEquals('/tmp', $switches[0]->getFirstValue());
         }
 
         public function testCanParseShortSwitchWithEmbeddedArg()
@@ -225,11 +223,10 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertTrue (is_array($parsed->args));
                 $this->assertEquals(array("help"), $parsed->args);
 
-                $this->assertTrue($parsed->switches->testHasSwitch('include'));
-                $switches = $parsed->switches->getSwitches();
-                $this->assertTrue(isset($switches['include']));
-                $this->assertEquals('include', $switches['include']->name);
-                $this->assertEquals('/tmp', $switches['include']->getFirstValue());
+                $switches = $parsed->switches;
+                $this->assertTrue(isset($switches[0]));
+                $this->assertEquals('include', $switches[0]->name);
+                $this->assertEquals('/tmp', $switches[0]->getFirstValue());
         }
 
         public function testCanParseLongSwitches()
@@ -255,8 +252,11 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertTrue (is_array($parsed->args));
                 $this->assertEquals(array("help"), $parsed->args);
 
-                $this->assertTrue($parsed->switches->testHasSwitch('longHelp'));
-                $this->assertTrue($parsed->switches->testHasSwitch('version'));
+                // do we have our long switches?
+                $switches = $parsed->switches;
+                $this->assertTrue(isset($switches[0]));
+                $this->assertEquals('version', $switches[0]->name);
+                $this->assertEquals('longHelp', $switches[1]->name);
         }
 
         public function testCanParseLongSwitchWithArgument()
@@ -282,12 +282,14 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertTrue (is_array($parsed->args));
                 $this->assertEquals(array("help"), $parsed->args);
 
-                $this->assertTrue($parsed->switches->testHasSwitch('include'));
-
-                $switches = $parsed->switches->getSwitches();
+                // do we have the right number of switches?
+                // (1 supplied + 2 defaults)
+                $switches = $parsed->switches;
                 $this->assertEquals(3, count($switches));
-                $this->assertEquals('include', $switches['include']->name);
-                $this->assertEquals('/tmp', $switches['include']->values[0]);
+
+                $this->assertTrue(isset($switches[0]));
+                $this->assertEquals('include', $switches[0]->name);
+                $this->assertEquals('/tmp', $switches[0]->getFirstValue());
         }
 
         public function testCanParseLongSwitchWithEmbeddedArgument()
@@ -312,12 +314,10 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertTrue (is_array($parsed->args));
                 $this->assertEquals(array("help"), $parsed->args);
 
-                $this->assertTrue($parsed->switches->testHasSwitch('include'));
-
-                $switches = $parsed->switches->getSwitches();
+                $switches = $parsed->switches;
                 $this->assertEquals(3, count($switches));
-                $this->assertEquals('include', $switches['include']->name);
-                $this->assertEquals('/tmp', $switches['include']->values[0]);
+                $this->assertEquals('include', $switches[0]->name);
+                $this->assertEquals('/tmp', $switches[0]->getFirstValue());
         }
 
         public function testCanparseCommandLineThatRepeat()
@@ -345,18 +345,20 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertTrue (is_array($parsed->args));
                 $this->assertEquals(array("help"), $parsed->args);
 
-                $this->assertTrue($parsed->switches->testHasSwitch('include'));
+                // did we get the right number of switches?
+                $switches = $parsed->switches;
+                $this->assertEquals(5, count($switches));
 
-                $switches = $parsed->switches->getSwitches();
-                $this->assertEquals(4, count($switches));
                 // did we get the include switch?
-                $this->assertEquals('include', $switches['include']->name);
-                $this->assertEquals('/tmp', $switches['include']->values[0]);
+                $this->assertEquals('include', $switches[1]->name);
+                $this->assertEquals('/tmp', $switches[1]->getFirstValue());
+
                 // did we get both library switches?
-                $retrievedArgs = $parsed->switches->getArgsForSwitch('library');
-                $this->assertEquals(2, count($switches['library']->values));
-                $this->assertEquals('fred', $switches['library']->values[0]);
-                $this->assertEquals('harry', $switches['library']->values[1]);
+                $this->assertEquals('library', $switches[0]->name);
+                $this->assertEquals('fred', $switches[0]->getFirstValue());
+
+                $this->assertEquals('library', $switches[2]->name);
+                $this->assertEquals('harry', $switches[2]->getFirstValue());
         }
 
         public function testCanTellShortAndLongSwitchesApart()
@@ -382,15 +384,14 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertTrue (is_array($parsed->args));
                 $this->assertEquals(array("help"), $parsed->args);
 
-                $this->assertTrue($parsed->switches->testHasSwitch('shortHelp'));
-                $this->assertTrue($parsed->switches->testHasSwitch('longHelp'));
-
-                $switches = $parsed->switches->getSwitches();
+                // did we get the number of switches we expected?
+                // (2 supplied + 2 default)
+                $switches = $parsed->switches;
                 $this->assertEquals(4, count($switches));
 
                 // did we get the include switch?
-                $this->assertEquals('shortHelp', $switches['shortHelp']->name);
-                $this->assertEquals('longHelp', $switches['longHelp']->name);
+                $this->assertEquals('shortHelp', $switches[0]->name);
+                $this->assertEquals('longHelp', $switches[1]->name);
         }
 
         public function testParserStopsOnDoubleDash()
@@ -416,11 +417,10 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertTrue (is_array($parsed->args));
                 $this->assertEquals(array("help"), $parsed->args);
 
-                $this->assertTrue($parsed->switches->testHasSwitch('shortHelp'));
-                $this->assertTrue($parsed->switches->testHasSwitch('version'));
-
-                $switches = $parsed->switches->getSwitchesByOrder();
+                // did we get the number of switches expected?
+                $switches = $parsed->switches;
                 $this->assertEquals(4, count($switches));
+
                 $this->assertEquals('version', $switches[0]->name);
                 $this->assertTrue($switches[0]->values[0]);
                 $this->assertEquals('shortHelp', $switches[1]->name);
@@ -615,12 +615,11 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertTrue (is_array($parsed->args));
                 $this->assertEquals(array(), $parsed->args);
 
-                $this->assertTrue($parsed->switches->testHasSwitch('shortHelp'));
-                $this->assertTrue($parsed->switches->testHasSwitch('version'));
-                $this->assertTrue($parsed->switches->testHasSwitch('include'));
-
-                $switches = $parsed->switches->getSwitchesByOrder();
+                // did we get the right number of switches?
+                $switches = $parsed->switches;
                 $this->assertEquals(5, count($switches));
+
+                // did we get the switches in the order we expected?
                 $this->assertEquals('version', $switches[0]->name);
                 $this->assertTrue($switches[0]->values[0]);
                 $this->assertEquals('shortHelp', $switches[1]->name);
@@ -658,12 +657,12 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertTrue (is_array($parsed->args));
                 $this->assertEquals(array(), $parsed->args);
 
-                $this->assertTrue($parsed->switches->testHasSwitch('shortHelp'));
-                $this->assertTrue($parsed->switches->testHasSwitch('version'));
-                $this->assertTrue($parsed->switches->testHasSwitch('warnings'));
-
-                $switches = $parsed->switches->getSwitchesByOrder();
+                // did we get the right number of switches?
+                $switches = $parsed->switches;
                 $this->assertEquals(4, count($switches));
+
+                // did we get the switches we expected, in the order
+                // we expected?
                 $this->assertEquals('version', $switches[0]->name);
                 $this->assertTrue($switches[0]->values[0]);
                 $this->assertEquals('shortHelp', $switches[1]->name);
@@ -698,12 +697,13 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertTrue (is_array($parsed->args));
                 $this->assertEquals(array(), $parsed->args);
 
-                $this->assertTrue($parsed->switches->testHasSwitch('warnings'));
-
-                $switches = $parsed->switches->getSwitches();
+                // did we get the number of switches we expected?
+                $switches = $parsed->switches;
                 $this->assertEquals(2, count($switches));
-                $this->assertEquals('warnings', $switches['warnings']->name);
-                $this->assertEquals('all', $switches['warnings']->values[0]);
+
+                // do we have the warnings switch?
+                $this->assertEquals('warnings', $switches[0]->name);
+                $this->assertEquals('all', $switches[0]->getFirstValue());
         }
 
         public function testOptionalArgsCanHaveValues()
@@ -727,12 +727,13 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertTrue (is_array($parsed->args));
                 $this->assertEquals(array(), $parsed->args);
 
-                $this->assertTrue($parsed->switches->testHasSwitch('warnings'));
-
-                $switches = $parsed->switches->getSwitches();
+                // did we get the number of switches that we expected?
+                $switches = $parsed->switches;
                 $this->assertEquals(2, count($switches));
-                $this->assertEquals('warnings', $switches['warnings']->name);
-                $this->assertEquals('all', $switches['warnings']->values[0]);
+
+                // do we have the warnings switch?
+                $this->assertEquals('warnings', $switches[0]->name);
+                $this->assertEquals('all', $switches[0]->values[0]);
         }
 
         public function testDefaultValuesAreAddedIfSwitchNotSeen()
@@ -759,11 +760,11 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 // it should only be the required switches that have
                 // default values
 
-                $switches = $parsed->switches->getSwitches();
+                $switches = $parsed->switches;
                 $this->assertTrue(is_array($switches));
                 $this->assertEquals(2, count($switches));
-                $this->assertTrue(isset($switches['warnings']));
-                $this->assertTrue(isset($switches['srcFolder']));
+                $this->assertEquals('srcFolder', $switches[0]->name);
+                $this->assertEquals('warnings', $switches[1]->name);
         }
 
         public function testDefaultValuesAreAddedIfNoSwitchesPresent()
@@ -811,11 +812,11 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertEquals(array(), $parsed->args);
 
                 // are the defaults present?
-                $switches = $parsed->switches->getSwitches();
+                $switches = $parsed->switches;
                 $this->assertTrue(is_array($switches));
                 $this->assertEquals(3, count($switches));
-                $this->assertTrue(isset($switches['properties']));
-                $this->assertTrue(isset($switches['packageXml']));
-                $this->assertTrue(isset($switches['srcFolder']));
+                $this->assertEquals('properties', $switches[0]->name);
+                $this->assertEquals('packageXml', $switches[1]->name);
+                $this->assertEquals('srcFolder', $switches[2]->name);
         }
 }
