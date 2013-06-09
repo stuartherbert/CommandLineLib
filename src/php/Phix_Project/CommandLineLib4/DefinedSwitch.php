@@ -463,6 +463,35 @@ class DefinedSwitch
         }
 
         /**
+         * get the switch that we'd prefer the user to use on the
+         * command line
+         *
+         * this is useful for printing out error messages
+         *
+         * @return string
+         */
+        public function getHumanReadableSwitch()
+        {
+                // do we have any long switches?
+                if (count($this->longSwitches))
+                {
+                        // return the first long switch
+                        reset($this->longSwitches);
+                        return '--' . current($this->longSwitches);
+                }
+                else if (count($this->shortSwitches))
+                {
+                        // return the first short switch
+                        reset($this->shortSwitches);
+                        return '-' . current($this->shortSwitches);
+                }
+                else
+                {
+                        return '';
+                }
+        }
+
+        /**
          * Make sure we have an argument defined
          */
         protected function requireValidArg()

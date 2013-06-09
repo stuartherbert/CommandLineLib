@@ -458,4 +458,77 @@ class DefinedSwitchTest extends PHPUnit_Framework_TestCase
 
                 $this->assertEquals($expectedArray, $desc);
         }
+
+        /**
+         * @covers Phix_Project\CommandLineLib4\DefinedSwitch
+         */
+        public function testCanGetHumanReadableLongSwitch()
+        {
+                // ----------------------------------------------------------------
+                // setup your test
+
+                $obj = new DefinedSwitch('include', 'add a folder to load commands from');
+                $obj->addLongSwitch('include');
+
+                $expectedSwitch = '--include';
+
+                // ----------------------------------------------------------------
+                // perform the change
+
+                $actualSwitch = $obj->getHumanReadableSwitch();
+
+                // ----------------------------------------------------------------
+                // test the results
+
+                $this->assertEquals($expectedSwitch, $actualSwitch);
+        }
+
+        /**
+         * @covers Phix_Project\CommandLineLib4\DefinedSwitch
+         */
+        public function testCanGetHumanReadableShortSwitch()
+        {
+                // ----------------------------------------------------------------
+                // setup your test
+
+                $obj = new DefinedSwitch('include', 'add a folder to load commands from');
+                $obj->addShortSwitch('I');
+
+                $expectedSwitch = '-I';
+
+                // ----------------------------------------------------------------
+                // perform the change
+
+                $actualSwitch = $obj->getHumanReadableSwitch();
+
+                // ----------------------------------------------------------------
+                // test the results
+
+                $this->assertEquals($expectedSwitch, $actualSwitch);
+        }
+
+        /**
+         * @covers Phix_Project\CommandLineLib4\DefinedSwitch
+         */
+        public function testPrefersLongSwitchOverShortSwitch()
+        {
+                // ----------------------------------------------------------------
+                // setup your test
+
+                $obj = new DefinedSwitch('include', 'add a folder to load commands from');
+                $obj->addShortSwitch('I')
+                    ->addLongSwitch('include');
+
+                $expectedSwitch = '--include';
+
+                // ----------------------------------------------------------------
+                // perform the change
+
+                $actualSwitch = $obj->getHumanReadableSwitch();
+
+                // ----------------------------------------------------------------
+                // test the results
+
+                $this->assertEquals($expectedSwitch, $actualSwitch);
+        }
 }

@@ -90,7 +90,7 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                         ->addShortSwitch('s')
                         ->addLongSwitch('srcFolder')
                         ->setRequiredArg('<srcFolder>', 'path to the folder to load source code from')
-                        ->setArgHasDefaultValueOf('/usr/bin/php');
+                        ->setArgHasDefaultValueOf('/usr/this-does-not-exist');
 
                 $options->newSwitch('warnings', 'enable warnings')
                         ->addShortSwitch('W')
@@ -130,10 +130,12 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 // we should have just the switches with default values
                 $switches = $parsed->switches;
                 $this->assertEquals(2, count($switches));
-                $this->assertEquals('srcFolder', $switches[0]->name);
-                $this->assertTrue($switches[0]->testIsDefaultValue());
-                $this->assertEquals('warnings', $switches[1]->name);
-                $this->assertTrue($switches[1]->testIsDefaultValue());
+                $this->assertTrue(isset($switches['srcFolder']));
+                $this->assertEquals('srcFolder', $switches['srcFolder']->name);
+                $this->assertTrue($switches['srcFolder']->testIsDefaultValue());
+                $this->assertTrue(isset($switches['warnings']));
+                $this->assertEquals('warnings', $switches['warnings']->name);
+                $this->assertTrue($switches['warnings']->testIsDefaultValue());
         }
 
         public function testCanParseShortSwitches()
@@ -160,16 +162,20 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
 
                 $switches = $parsed->switches;
                 $this->assertEquals(4, count($switches));
-                $this->assertEquals('version', $switches[0]->name);
-                $this->assertTrue($switches[0]->values[0]);
-                $this->assertEquals('shortHelp', $switches[1]->name);
-                $this->assertTrue($switches[1]->values[0]);
-                $this->assertEquals('srcFolder', $switches[2]->name);
-                $this->assertEquals('/usr/bin/php', $switches[2]->values[0]);
-                $this->assertTrue($switches[3]->testIsDefaultValue());
-                $this->assertEquals('warnings', $switches[3]->name);
-                $this->assertEquals('all', $switches[3]->values[0]);
-                $this->assertTrue($switches[3]->testIsDefaultValue());
+                $this->assertTrue(isset($switches['version']));
+                $this->assertEquals('version', $switches['version']->name);
+                $this->assertTrue($switches['version']->values[0]);
+                $this->assertTrue(isset($switches['shortHelp']));
+                $this->assertEquals('shortHelp', $switches['shortHelp']->name);
+                $this->assertTrue($switches['shortHelp']->values[0]);
+                $this->assertTrue(isset($switches['srcFolder']));
+                $this->assertEquals('srcFolder', $switches['srcFolder']->name);
+                $this->assertEquals('/usr/this-does-not-exist', $switches['srcFolder']->values[0]);
+                $this->assertTrue($switches['srcFolder']->testIsDefaultValue());
+                $this->assertTrue(isset($switches['warnings']));
+                $this->assertEquals('warnings', $switches['warnings']->name);
+                $this->assertEquals('all', $switches['warnings']->values[0]);
+                $this->assertTrue($switches['warnings']->testIsDefaultValue());
         }
 
         public function testCanParseShortSwitchWithArg()
@@ -196,9 +202,9 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertEquals(array("help"), $parsed->args);
 
                 $switches = $parsed->switches;
-                $this->assertTrue(isset($switches[0]));
-                $this->assertEquals('include', $switches[0]->name);
-                $this->assertEquals('/tmp', $switches[0]->getFirstValue());
+                $this->assertTrue(isset($switches['include']));
+                $this->assertEquals('include', $switches['include']->name);
+                $this->assertEquals('/tmp', $switches['include']->getFirstValue());
         }
 
         public function testCanParseShortSwitchWithEmbeddedArg()
@@ -224,9 +230,9 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertEquals(array("help"), $parsed->args);
 
                 $switches = $parsed->switches;
-                $this->assertTrue(isset($switches[0]));
-                $this->assertEquals('include', $switches[0]->name);
-                $this->assertEquals('/tmp', $switches[0]->getFirstValue());
+                $this->assertTrue(isset($switches['include']));
+                $this->assertEquals('include', $switches['include']->name);
+                $this->assertEquals('/tmp', $switches['include']->getFirstValue());
         }
 
         public function testCanParseLongSwitches()
@@ -254,9 +260,10 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
 
                 // do we have our long switches?
                 $switches = $parsed->switches;
-                $this->assertTrue(isset($switches[0]));
-                $this->assertEquals('version', $switches[0]->name);
-                $this->assertEquals('longHelp', $switches[1]->name);
+                $this->assertTrue(isset($switches['version']));
+                $this->assertEquals('version', $switches['version']->name);
+                $this->assertTrue(isset($switches['longHelp']));
+                $this->assertEquals('longHelp', $switches['longHelp']->name);
         }
 
         public function testCanParseLongSwitchWithArgument()
@@ -287,9 +294,9 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $switches = $parsed->switches;
                 $this->assertEquals(3, count($switches));
 
-                $this->assertTrue(isset($switches[0]));
-                $this->assertEquals('include', $switches[0]->name);
-                $this->assertEquals('/tmp', $switches[0]->getFirstValue());
+                $this->assertTrue(isset($switches['include']));
+                $this->assertEquals('include', $switches['include']->name);
+                $this->assertEquals('/tmp', $switches['include']->getFirstValue());
         }
 
         public function testCanParseLongSwitchWithEmbeddedArgument()
@@ -316,8 +323,9 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
 
                 $switches = $parsed->switches;
                 $this->assertEquals(3, count($switches));
-                $this->assertEquals('include', $switches[0]->name);
-                $this->assertEquals('/tmp', $switches[0]->getFirstValue());
+                $this->assertTrue(isset($switches['include']));
+                $this->assertEquals('include', $switches['include']->name);
+                $this->assertEquals('/tmp', $switches['include']->getFirstValue());
         }
 
         public function testCanparseCommandLineThatRepeat()
@@ -347,18 +355,18 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
 
                 // did we get the right number of switches?
                 $switches = $parsed->switches;
-                $this->assertEquals(5, count($switches));
+                $this->assertEquals(4, count($switches));
 
                 // did we get the include switch?
-                $this->assertEquals('include', $switches[1]->name);
-                $this->assertEquals('/tmp', $switches[1]->getFirstValue());
+                $this->assertTrue(isset($switches['include']));
+                $this->assertEquals('include', $switches['include']->name);
+                $this->assertEquals('/tmp', $switches['include']->getFirstValue());
 
                 // did we get both library switches?
-                $this->assertEquals('library', $switches[0]->name);
-                $this->assertEquals('fred', $switches[0]->getFirstValue());
-
-                $this->assertEquals('library', $switches[2]->name);
-                $this->assertEquals('harry', $switches[2]->getFirstValue());
+                $this->assertTrue(isset($switches['library']));
+                $this->assertEquals('library', $switches['library']->name);
+                $this->assertEquals('fred', $switches['library']->values[0]);
+                $this->assertEquals('harry', $switches['library']->values[1]);
         }
 
         public function testCanTellShortAndLongSwitchesApart()
@@ -390,8 +398,10 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertEquals(4, count($switches));
 
                 // did we get the include switch?
-                $this->assertEquals('shortHelp', $switches[0]->name);
-                $this->assertEquals('longHelp', $switches[1]->name);
+                $this->assertTrue(isset($switches['shortHelp']));
+                $this->assertEquals('shortHelp', $switches['shortHelp']->name);
+                $this->assertTrue(isset($switches['longHelp']));
+                $this->assertEquals('longHelp', $switches['longHelp']->name);
         }
 
         public function testParserStopsOnDoubleDash()
@@ -421,16 +431,20 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $switches = $parsed->switches;
                 $this->assertEquals(4, count($switches));
 
-                $this->assertEquals('version', $switches[0]->name);
-                $this->assertTrue($switches[0]->values[0]);
-                $this->assertEquals('shortHelp', $switches[1]->name);
-                $this->assertTrue($switches[1]->values[0]);
-                $this->assertEquals('srcFolder', $switches[2]->name);
-                $this->assertEquals('/usr/bin/php', $switches[2]->values[0]);
-                $this->assertTrue($switches[3]->testIsDefaultValue());
-                $this->assertEquals('warnings', $switches[3]->name);
-                $this->assertEquals('all', $switches[3]->values[0]);
-                $this->assertTrue($switches[3]->testIsDefaultValue());
+                $this->assertTrue(isset($switches['version']));
+                $this->assertEquals('version', $switches['version']->name);
+                $this->assertTrue($switches['version']->values[0]);
+                $this->assertTrue(isset($switches['shortHelp']));
+                $this->assertEquals('shortHelp', $switches['shortHelp']->name);
+                $this->assertTrue($switches['shortHelp']->values[0]);
+                $this->assertTrue(isset($switches['srcFolder']));
+                $this->assertEquals('srcFolder', $switches['srcFolder']->name);
+                $this->assertEquals('/usr/this-does-not-exist', $switches['srcFolder']->values[0]);
+                $this->assertTrue($switches['srcFolder']->testIsDefaultValue());
+                $this->assertTrue(isset($switches['warnings']));
+                $this->assertEquals('warnings', $switches['warnings']->name);
+                $this->assertEquals('all', $switches['warnings']->values[0]);
+                $this->assertTrue($switches['warnings']->testIsDefaultValue());
         }
 
         public function testParserThrowsExceptionWhenUnexpectedShortSwitch()
@@ -619,21 +633,25 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $switches = $parsed->switches;
                 $this->assertEquals(5, count($switches));
 
-                // did we get the switches in the order we expected?
-                $this->assertEquals('version', $switches[0]->name);
-                $this->assertTrue($switches[0]->values[0]);
-                $this->assertEquals('shortHelp', $switches[1]->name);
-                $this->assertTrue($switches[1]->values[0]);
-                $this->assertEquals('include', $switches[2]->name);
-                $this->assertEquals('/fred', $switches[2]->values[0]);
+                // did we get the switches we expected?
+                $this->assertTrue(isset($switches['version']));
+                $this->assertEquals('version', $switches['version']->name);
+                $this->assertTrue($switches['version']->values[0]);
+                $this->assertTrue(isset($switches['shortHelp']));
+                $this->assertEquals('shortHelp', $switches['shortHelp']->name);
+                $this->assertTrue($switches['shortHelp']->values[0]);
+                $this->assertTrue(isset($switches['include']));
+                $this->assertEquals('include', $switches['include']->name);
+                $this->assertEquals('/fred', $switches['include']->values[0]);
 
-                // don't forget the switch with the default value
-                $this->assertEquals('srcFolder', $switches[3]->name);
-                $this->assertEquals('/usr/bin/php', $switches[3]->values[0]);
-                $this->assertTrue($switches[3]->testIsDefaultValue());
-                $this->assertEquals('warnings', $switches[4]->name);
-                $this->assertEquals('all', $switches[4]->values[0]);
-                $this->assertTrue($switches[4]->testIsDefaultValue());
+                // don't forget the switches with default values
+                $this->assertTrue(isset($switches['include']));
+                $this->assertEquals('srcFolder', $switches['srcFolder']->name);
+                $this->assertEquals('/usr/this-does-not-exist', $switches['srcFolder']->values[0]);
+                $this->assertTrue($switches['srcFolder']->testIsDefaultValue());
+                $this->assertEquals('warnings', $switches['warnings']->name);
+                $this->assertEquals('all', $switches['warnings']->values[0]);
+                $this->assertTrue($switches['warnings']->testIsDefaultValue());
         }
 
         public function testCanLumpShortSwitchesTogetherWithLastOneHavingAOptionalArgument()
@@ -661,19 +679,22 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $switches = $parsed->switches;
                 $this->assertEquals(4, count($switches));
 
-                // did we get the switches we expected, in the order
-                // we expected?
-                $this->assertEquals('version', $switches[0]->name);
-                $this->assertTrue($switches[0]->values[0]);
-                $this->assertEquals('shortHelp', $switches[1]->name);
-                $this->assertTrue($switches[1]->values[0]);
-                $this->assertEquals('warnings', $switches[2]->name);
-                $this->assertEquals('all', $switches[2]->values[0]);
+                // did we get the switches we expected?
+                $this->assertTrue(isset($switches['version']));
+                $this->assertEquals('version', $switches['version']->name);
+                $this->assertTrue($switches['version']->values[0]);
+                $this->assertTrue(isset($switches['shortHelp']));
+                $this->assertEquals('shortHelp', $switches['shortHelp']->name);
+                $this->assertTrue($switches['shortHelp']->values[0]);
+                $this->assertTrue(isset($switches['warnings']));
+                $this->assertEquals('warnings', $switches['warnings']->name);
+                $this->assertEquals('all', $switches['warnings']->values[0]);
 
                 // don't forget the default values
-                $this->assertEquals('srcFolder', $switches[3]->name);
-                $this->assertEquals('/usr/bin/php', $switches[3]->values[0]);
-                $this->assertTrue($switches[3]->testIsDefaultValue());
+                $this->assertTrue(isset($switches['srcFolder']));
+                $this->assertEquals('srcFolder', $switches['srcFolder']->name);
+                $this->assertEquals('/usr/this-does-not-exist', $switches['srcFolder']->values[0]);
+                $this->assertTrue($switches['srcFolder']->testIsDefaultValue());
         }
 
         public function testSwitchesCanHaveOptionalArgs()
@@ -702,8 +723,9 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertEquals(2, count($switches));
 
                 // do we have the warnings switch?
-                $this->assertEquals('warnings', $switches[0]->name);
-                $this->assertEquals('all', $switches[0]->getFirstValue());
+                $this->assertTrue(isset($switches['warnings']));
+                $this->assertEquals('warnings', $switches['warnings']->name);
+                $this->assertEquals('all', $switches['warnings']->getFirstValue());
         }
 
         public function testOptionalArgsCanHaveValues()
@@ -732,8 +754,9 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $this->assertEquals(2, count($switches));
 
                 // do we have the warnings switch?
-                $this->assertEquals('warnings', $switches[0]->name);
-                $this->assertEquals('all', $switches[0]->values[0]);
+                $this->assertTrue(isset($switches['warnings']));
+                $this->assertEquals('warnings', $switches['warnings']->name);
+                $this->assertEquals('all', $switches['warnings']->getFirstValue());
         }
 
         public function testDefaultValuesAreAddedIfSwitchNotSeen()
@@ -763,8 +786,10 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $switches = $parsed->switches;
                 $this->assertTrue(is_array($switches));
                 $this->assertEquals(2, count($switches));
-                $this->assertEquals('srcFolder', $switches[0]->name);
-                $this->assertEquals('warnings', $switches[1]->name);
+                $this->assertTrue(isset($switches['srcFolder']));
+                $this->assertEquals('srcFolder', $switches['srcFolder']->name);
+                $this->assertTrue(isset($switches['warnings']));
+                $this->assertEquals('warnings', $switches['warnings']->name);
         }
 
         public function testDefaultValuesAreAddedIfNoSwitchesPresent()
@@ -815,8 +840,11 @@ class CommandLineParserTest extends PHPUnit_Framework_TestCase
                 $switches = $parsed->switches;
                 $this->assertTrue(is_array($switches));
                 $this->assertEquals(3, count($switches));
-                $this->assertEquals('properties', $switches[0]->name);
-                $this->assertEquals('packageXml', $switches[1]->name);
-                $this->assertEquals('srcFolder', $switches[2]->name);
+                $this->assertTrue(isset($switches['properties']));
+                $this->assertEquals('properties', $switches['properties']->name);
+                $this->assertTrue(isset($switches['packageXml']));
+                $this->assertEquals('packageXml', $switches['packageXml']->name);
+                $this->assertTrue(isset($switches['srcFolder']));
+                $this->assertEquals('srcFolder', $switches['srcFolder']->name);
         }
 }

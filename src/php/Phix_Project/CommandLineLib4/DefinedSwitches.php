@@ -243,7 +243,7 @@ class DefinedSwitches
                         return $this->switches[$name];
                 }
 
-                throw new \Exception("unknown switch $switch");
+                throw new \Exception("unknown switch $name");
         }
 
         /**

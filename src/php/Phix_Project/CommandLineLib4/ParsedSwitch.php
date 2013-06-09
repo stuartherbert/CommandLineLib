@@ -46,6 +46,8 @@
 
 namespace Phix_Project\CommandLineLib4;
 
+use Phix_Project\ContractLib2\Contract;
+
 /**
  * Represents a switch that has been parsed from the command-line
  */
@@ -54,7 +56,7 @@ class ParsedSwitch
         /**
          * The full definition for this switch
          *
-         * @var DefinedSwitch
+         * @var Phix_Project\CommandLineLib4\DefinedSwitch
          */
         public $definition = null;
 
@@ -148,13 +150,23 @@ class ParsedSwitch
                         return $return;
                 }
 
+                // to improve readability, we need to prefix all of our
+                // error messages with the switch
+                $errorPrefix = $this->definition->getHumanReadableSwitch();
+
                 // are all the arguments valid?
                 foreach ($this->values as $value)
                 {
                         $result = $this->definition->arg->testIsValid($value);
                         if ($result->hasErrors())
                         {
-                                $return = array_merge($return, $result->getErrors());
+                                // prefix our switch to the front of the errors,
+                                // so that the end-user knows which switch got
+                                // him/her into trouble
+                                foreach ($result->getErrors() as $errorMsg)
+                                {
+                                        $return[] = $errorPrefix . ': ' . $errorMsg;
+                                }
                         }
                 }
 
