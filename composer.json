@@ -1,6 +1,6 @@
 {
-	"name": "phix/commandlinelib4",
-	"description": "commandlinelib4 provides a high-quality command line parser via a fluent interface",
+	"name": "phix/commandlinelib",
+	"description": "CommandLineLib provides a high-quality command line parser via a fluent interface",
 	"keywords": [
 		"args parser",
 		"getopt"
@@ -23,10 +23,10 @@
 		"psr-0": { "" : "src/php/" }
 	},
 	"require": {
-		"phix/contractlib2": "2.*",
-		"phix/validationlib4": "4.*"
+		"phix/contractlib": "2.*",
+		"phix/validationlib": "4.*"
 	},
 	"require-dev": {
-		"phix/autoloader4": "4.*"
+		"phix/autoloader": "4.*"
 	}
 }
