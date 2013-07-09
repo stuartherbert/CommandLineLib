@@ -35,7 +35,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package     Phix_Project
- * @subpackage  CommandLineLib3
+ * @subpackage  CommandLineLib4
  * @author      Stuart Herbert <stuart@stuartherbert.com>
  * @copyright   2011-present Stuart Herbert. www.stuartherbert.com
  * @copyright   2010 Gradwell dot com Ltd. www.gradwell.com
@@ -44,7 +44,7 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib3;
+namespace Phix_Project\CommandLineLib4;
 
 use Phix_Project\ContractLib2\Contract;
 
@@ -84,13 +84,41 @@ class DefinedSwitches
         protected $allSwitchesLoaded = false;
 
         /**
-         * Add a switch to the list of allowed switches
+         * Add a switch to our list
+         *
+         * @param DefinedSwitch $switch [description]
+         */
+        public function addSwitch(DefinedSwitch $switch)
+        {
+                // shorthand
+                $switches = $this->switches;
+
+                // catch programming mistakes
+                Contract::PreConditions(function() use($switch, $switches)
+                {
+                        // we should never add the same switch twice!!
+                        Contract::Requires(!isset($switches[$switch->name]), '$switch->name must be unique');
+                });
+
+                // note that our cache of introspected switches
+                // is now invalid
+                $this->allSwitchesLoaded = false;
+
+                // add to our list
+                $this->switches[$switch->name] = $switch;
+
+                // return for fluent interface support
+                return $this;
+        }
+
+        /**
+         * Create a switch and add it to our list
          *
          * @param string $name
          * @param string $desc
          * @return DefinedSwitch
          */
-        public function addSwitch($name, $desc)
+        public function newSwitch($name, $desc)
         {
                 Contract::PreConditions(function() use ($name, $desc)
                 {
@@ -101,16 +129,13 @@ class DefinedSwitches
                         Contract::RequiresValue($desc, strlen($desc) > 0, '$desc cannot be an empty string');
                 });
 
-                // note that our cache of introspected switches
-                // is now invalid
-                $this->allSwitchesLoaded = false;
-
                 // create and add the switch
-                $this->switches[$name] = new DefinedSwitch($name, $desc);
+                $switch = new DefinedSwitch($name, $desc);
+                $this->addSwitch($switch);
 
                 // return the switch for further configuration
                 // by the caller
-                return $this->switches[$name];
+                return $switch;
         }
 
         /**
@@ -218,7 +243,7 @@ class DefinedSwitches
                         return $this->switches[$name];
                 }
 
-                throw new \Exception("unknown switch $switch");
+                throw new \Exception("unknown switch $name");
         }
 
         /**

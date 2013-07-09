@@ -35,7 +35,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package     Phix_Project
- * @subpackage  CommandLineLib3
+ * @subpackage  CommandLineLib4
  * @author      Stuart Herbert <stuart@stuartherbert.com>
  * @copyright   2011-present Stuart Herbert. www.stuartherbert.com
  * @copyright   2010 Gradwell dot com Ltd. www.gradwell.com
@@ -44,7 +44,7 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib3;
+namespace Phix_Project\CommandLineLib4;
 
 use Phix_Project\ValidationLib4\Validator;
 use Phix_Project\ContractLib2\Contract;
@@ -109,7 +109,7 @@ class DefinedSwitch
         /**
          * The argument (if any) that this switch expects
          *
-         * @var DefinedArg
+         * @var Phix_Project\CommandLineLib4\DefinedArg
          */
         public $arg = null;
 
@@ -169,7 +169,7 @@ class DefinedSwitch
          * @param string $switch
          * @return DefinedSwitch
          */
-        public function setWithShortSwitch($switch)
+        public function addShortSwitch($switch)
         {
                 // catch programming errors
                 Contract::PreConditions(function() use ($switch)
@@ -196,7 +196,7 @@ class DefinedSwitch
          * @param string $switch
          * @return DefinedSwitch
          */
-        public function setWithLongSwitch($switch)
+        public function addLongSwitch($switch)
         {
                 // catch programming errors
                 Contract::PreConditions(function() use ($switch)
@@ -223,7 +223,7 @@ class DefinedSwitch
          * @param string $argDesc the argument's description
          * @return DefinedSwitch
          */
-        public function setWithOptionalArg($argName, $argDesc)
+        public function setOptionalArg($argName, $argDesc)
         {
                 // catch programming errors
                 Contract::PreConditions(function() use ($argName, $argDesc)
@@ -247,7 +247,7 @@ class DefinedSwitch
          * @param string $argDesc the argument's description
          * @return DefinedSwitch
          */
-        public function setWithRequiredArg($argName, $argDesc)
+        public function setRequiredArg($argName, $argDesc)
         {
                 // catch programming errors
                 Contract::PreConditions(function() use ($argName, $argDesc)
@@ -460,6 +460,35 @@ class DefinedSwitch
                 \ksort($longSwitches);
 
                 return array_merge($shortSwitches, $longSwitches);
+        }
+
+        /**
+         * get the switch that we'd prefer the user to use on the
+         * command line
+         *
+         * this is useful for printing out error messages
+         *
+         * @return string
+         */
+        public function getHumanReadableSwitch()
+        {
+                // do we have any long switches?
+                if (count($this->longSwitches))
+                {
+                        // return the first long switch
+                        reset($this->longSwitches);
+                        return '--' . current($this->longSwitches);
+                }
+                else if (count($this->shortSwitches))
+                {
+                        // return the first short switch
+                        reset($this->shortSwitches);
+                        return '-' . current($this->shortSwitches);
+                }
+                else
+                {
+                        return '';
+                }
         }
 
         /**

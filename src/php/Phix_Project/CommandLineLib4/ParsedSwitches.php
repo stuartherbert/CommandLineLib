@@ -35,7 +35,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package     Phix_Project
- * @subpackage  CommandLineLib3
+ * @subpackage  CommandLineLib4
  * @author      Stuart Herbert <stuart@stuartherbert.com>
  * @copyright   2011-present Stuart Herbert. www.stuartherbert.com
  * @copyright   2010 Gradwell dot com Ltd. www.gradwell.com
@@ -44,7 +44,7 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib3;
+namespace Phix_Project\CommandLineLib4;
 
 use Phix_Project\ContractLib2\Contract;
 
@@ -60,14 +60,6 @@ class ParsedSwitches
          * @var array(ParsedSwitch)
          */
         protected $switchesByName  = array();
-
-        /**
-         * A list of the switches that have been parsed, in the order
-         * that the parser found them on the command line
-         *
-         * @var array
-         */
-	protected $switchesByOrder = array();
 
         /**
          * Add a switch to this collection
@@ -90,7 +82,6 @@ class ParsedSwitches
 
                 $this->requireValidExpectedSwitchName($expectedOptions, $name);
                 $this->addSwitchByName($expectedOptions, $name, $arg);
-                $this->addSwitchByOrder($expectedOptions, $name, $arg);
         }
 
         /**
@@ -118,49 +109,23 @@ class ParsedSwitches
 
                 if (!isset($this->switchesByName[$name]))
                 {
+                        // first time we've seen this switch
                         $this->switchesByName[$name] = new ParsedSwitch($expectedOptions->getSwitchByName($name));
                 }
+
+                // increment the number of times we've seen this switch
                 $this->switchesByName[$name]->addToInvokeCount();
+
+                // add the argument to the switch
                 $this->switchesByName[$name]->addValue($arg);
 
+                // if we're using the default value, let the switch know
                 if ($isDefaultValue)
                 {
                         $this->switchesByName[$name]->setIsUsingDefaultValue();
                 }
-        }
 
-        /**
-         * Add a switch to our 'by-order' indexed list
-         *
-         * @param DefinedSwitches $expectedOptions
-         *      A list of the switches that are allowed
-         * @param string $name
-         *      The name of the switch to add to this collection
-         * @param type $arg
-         *      The value of any argument found by the parser
-         * @param boolean $isDefaultValue
-         *      True if $arg is the default value for this switch
-         */
-        protected function addSwitchByOrder(DefinedSwitches $expectedOptions, $name, $arg, $isDefaultValue = false)
-        {
-                // catch programming errors
-                Contract::PreConditions(function() use ($name, $isDefaultValue)
-                {
-                        Contract::RequiresValue($name, is_string($name), '$name must be a string');
-                        Contract::RequiresValue($name, strlen($name) > 0, '$name cannot be an empty string');
-
-                        Contract::RequiresValue($isDefaultValue, is_bool($isDefaultValue), '$isDefaultValue must be a boolean value');
-                });
-
-                $parsedOption = new ParsedSwitch($expectedOptions->getSwitchByName($name));
-                $parsedOption->addToInvokeCount();
-                $parsedOption->addValue($arg);
-                if ($isDefaultValue)
-                {
-                        $parsedOption->setIsUsingDefaultValue();
-                }
-
-		$this->switchesByOrder[] = $parsedOption;
+                // all done
         }
 
         /**
@@ -177,7 +142,6 @@ class ParsedSwitches
          * @param type $value
          * @return type
          */
-
         public function addSwitchWithDefaultValueIfUnseen(DefinedSwitches $expectedOptions, $switchName, $value)
         {
                 $this->requireValidExpectedSwitchName($expectedOptions, $switchName);
@@ -196,7 +160,6 @@ class ParsedSwitches
                 }
 
                 $this->addSwitchByName($expectedOptions, $switchName, $value, true);
-                $this->addSwitchByOrder($expectedOptions, $switchName, $value, true);
         }
 
         /**
@@ -240,18 +203,6 @@ class ParsedSwitches
         {
                 $this->requireValidSwitchName($switchName);
                 return $this->switchesByName[$switchName];
-        }
-
-        /**
-         * Get a list of the switches that we have seen
-         *
-         * The returned list is sorted in the order that we saw the switches
-         *
-         * @return array
-         */
-        public function getSwitchesByOrder()
-        {
-                return $this->switchesByOrder;
         }
 
         /**

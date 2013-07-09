@@ -35,7 +35,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package     Phix_Project
- * @subpackage  CommandLineLib3
+ * @subpackage  CommandLineLib4
  * @author      Stuart Herbert <stuart@stuartherbert.com>
  * @copyright   2011-present Stuart Herbert. www.stuartherbert.com
  * @copyright   2010 Gradwell dot com Ltd. www.gradwell.com
@@ -44,7 +44,7 @@
  * @version     @@PACKAGE_VERSION@@
  */
 
-namespace Phix_Project\CommandLineLib3;
+namespace Phix_Project\CommandLineLib4;
 
 use PHPUnit_Framework_TestCase;
 use Phix_Project\ValidationLib4\Type_MustBeString;
@@ -219,7 +219,7 @@ class ParsedSwitchTest extends PHPUnit_Framework_TestCase
                 $def = new DefinedSwitch($name, $desc);
                 $this->assertEquals($def->name, $name);
                 $this->assertEquals($def->desc, $desc);
-                $def->setWithRequiredArg('harry', 'harry does love his food');
+                $def->setRequiredArg('harry', 'harry does love his food');
                 $def->setArgValidator(new Type_MustBeString());
 
                 // now, we use the definition to create
@@ -244,7 +244,7 @@ class ParsedSwitchTest extends PHPUnit_Framework_TestCase
                 $def = new DefinedSwitch($name, $desc);
                 $this->assertEquals($def->name, $name);
                 $this->assertEquals($def->desc, $desc);
-                $def->setWithRequiredArg('harry', 'harry does love his food');
+                $def->setRequiredArg('harry', 'harry does love his food');
                 $def->setArgValidator(new Type_MustBeInteger());
 
                 // now, we use the definition to create
