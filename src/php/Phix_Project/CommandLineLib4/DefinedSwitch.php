@@ -144,18 +144,27 @@ class DefinedSwitch
         const FLAG_ACTSASCOMMAND = 2;
 
         /**
-         * Constructor
+         * set the name of this switch
          *
-         * @param string $name
-         *      The switch's name, used as its ID everywhere in the
-         *      command-line parser
          * @param string $desc
          *      The switch's short description
          */
-        public function __construct($name, $desc)
+        public function setName($name)
         {
                 $this->name = $name;
+                return $this;
+        }
+
+        /**
+         * Set the description of this switch
+         *
+         * @param string $desc
+         *      The switch's short description
+         */
+        public function setShortDescription($desc)
+        {
                 $this->desc = $desc;
+                return $this;
         }
 
         /**
