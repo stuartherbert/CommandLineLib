@@ -61,6 +61,9 @@ class ParsedSwitches
          */
         protected $switchesByName  = array();
 
+        // is one of the parsed switches a command switch?
+        protected $hasActsAsCommandSwitch = false;
+
         /**
          * Add a switch to this collection
          *
@@ -125,6 +128,11 @@ class ParsedSwitches
                         $this->switchesByName[$name]->setIsUsingDefaultValue();
                 }
 
+                // is this switch actually a command switch?
+                if ($this->switchesByName[$name]->testActsAsCommand()) {
+                        $this->hasActsAsCommandSwitch = true;
+                }
+
                 // all done
         }
 
@@ -176,6 +184,16 @@ class ParsedSwitches
                 }
 
                 return false;
+        }
+
+        /**
+         * Have we seen a switch that actually acts as a command?
+         *
+         * @return boolean
+         */
+        public function testHasActsAsCommandSwitch()
+        {
+                return $this->hasActsAsCommandSwitch;
         }
 
         /**

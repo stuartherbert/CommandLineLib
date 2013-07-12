@@ -130,16 +130,24 @@ class DefinedSwitch
          * The behaviour flag for switches that can be repeated on the
          * command-line
          *
-         * The classic example of such a switch is '-vvv', where additional
+         * The classic example of such a switch is '-VVV', where additional
          * repeats make the app more and more verbose
          */
         const FLAG_REPEATABLE = 1;
 
         /**
+         * The behaviour flag for switches that are actually commands
+         *
+         * The classic example of such a switch is '-?' for listing
+         * the options that the command accepts
+         */
+        const FLAG_ACTSASCOMMAND = 2;
+
+        /**
          * Constructor
          *
          * @param string $name
-         *      The switch's name, used as it's ID everywhere in the
+         *      The switch's name, used as its ID everywhere in the
          *      command-line parser
          * @param string $desc
          *      The switch's short description
@@ -159,6 +167,18 @@ class DefinedSwitch
         public function setSwitchIsRepeatable()
         {
                 $this->flags |= self::FLAG_REPEATABLE;
+                return $this;
+        }
+
+        /**
+         * Set it so that the parser stops parsing once it has seen this
+         * switch on the command-line
+         *
+         * @return DefinedSwitch
+         */
+        public function setSwitchActsAsCommand()
+        {
+                $this->flags |= self::FLAG_ACTSASCOMMAND;
                 return $this;
         }
 
@@ -427,6 +447,20 @@ class DefinedSwitch
         public function testIsRepeatable()
         {
                 if($this->flags & self::FLAG_REPEATABLE)
+                {
+                        return true;
+                }
+                return false;
+        }
+
+        /**
+         * Is this switch really a command, pretending to be a switch?
+         *
+         * @return boolean
+         */
+        public function testActsAsCommand()
+        {
+                if ($this->flags & self::FLAG_ACTSASCOMMAND)
                 {
                         return true;
                 }

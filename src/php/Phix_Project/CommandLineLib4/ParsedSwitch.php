@@ -203,4 +203,14 @@ class ParsedSwitch
         {
                 return $this->isUsingDefaultValue;
         }
+
+        /**
+         * Is this switch really a command, hiding as a switch?
+         *
+         * @return boolean
+         */
+        public function testActsAsCommand()
+        {
+                return $this->definition->testActsAsCommand();
+        }
 }
