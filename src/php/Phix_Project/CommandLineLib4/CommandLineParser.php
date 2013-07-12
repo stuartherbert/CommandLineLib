@@ -127,15 +127,20 @@ class CommandLineParser
                         }
                 }
 
-                // now, we need to merge in the default values for any
-                // arguments that have not been specified by the user
-                $defaultValues = $expectedOptions->getDefaultValues();
-
-                foreach ($defaultValues as $name => $value)
+                // we need to know if any of the switches act as commands,
+                // because that completely changes what we do next
+                if (!$parsedSwitches->testHasActsAsCommandSwitch())
                 {
-                        if ($value !== null && $expectedOptions->getSwitchByName($name)->testHasArgument())
+                        // now, we need to merge in the default values for any
+                        // arguments that have not been specified by the user
+                        $defaultValues = $expectedOptions->getDefaultValues();
+
+                        foreach ($defaultValues as $name => $value)
                         {
-                                $parsedSwitches->addSwitchWithDefaultValueIfUnseen($expectedOptions, $name, $value);
+                                if ($value !== null && $expectedOptions->getSwitchByName($name)->testHasArgument())
+                                {
+                                        $parsedSwitches->addSwitchWithDefaultValueIfUnseen($expectedOptions, $name, $value);
+                                }
                         }
                 }
 
@@ -294,8 +299,9 @@ class CommandLineParser
          *      The list of switches that we have already parsed
          * @param DefinedSwitches $expectedOptions
          *      The list of command-line switches that we support
-         * @return int
-         *      The new value of $argsIndex
+         * @return array(int,boolean)
+         *      The new value of $argsIndex, and TRUE if the parser should
+         *      stop parsing switches
          */
         protected function parseLongSwitch($args, $argsIndex, ParsedSwitches $parsedSwitches, DefinedSwitches $expectedOptions)
         {
@@ -349,10 +355,11 @@ class CommandLineParser
                         }
                 }
 
+                // add the switch, now that we have parsed it
+                $parsedSwitches->addSwitch($expectedOptions, $switch->name, $arg);
+
                 // increment to the next item in the list
                 $argsIndex++;
-
-                $parsedSwitches->addSwitch($expectedOptions, $switch->name, $arg);
 
                 // all done
                 return $argsIndex;
