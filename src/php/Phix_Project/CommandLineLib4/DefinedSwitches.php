@@ -288,9 +288,14 @@ class DefinedSwitches
          * This is for apps like phix, which display a help message that
          * is designed to look like a UNIX manual page
          *
+         * @param array $options
+         *        a list of options to change the behaviour
+         *
+         *        actsAsCommand => false : filter out command switches
+         *
          * @return array(DefinedSwitch)
          */
-        public function getSwitchesInDisplayOrder()
+        public function getSwitchesInDisplayOrder($options = array())
         {
                 // turn the list into something that's suitably sorted
                 $shortSwitchesWithoutArgs = array();
@@ -305,6 +310,13 @@ class DefinedSwitches
 
                 foreach ($allSwitches as $switch)
                 {
+                        // do we need to skip this switch?
+                        if (isset($options['actsAsCommand']) && !$options['actsAsCommand'] && $switch->testActsAsCommand())
+                        {
+                                // skip this switch
+                                continue;
+                        }
+
                         foreach ($switch->shortSwitches as $shortSwitch)
                         {
                                 $allShortSwitches['-' . $shortSwitch] = $switch;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" packagerversion="1.9.1" version="2.0" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0     http://pear.php.net/dtd/tasks-1.0.xsd     http://pear.php.net/dtd/package-2.0     http://pear.php.net/dtd/package-2.0.xsd">
-  <name>CommandLineLib3</name>
-  <channel>pear.phix-project.org</channel>
+  <name>${project.name}</name>
+  <channel>${project.channel}</channel>
   <summary>A simple-to-use command line parser</summary>
   <description>
     CommandLineLib is a simple-to-use PHP component that provides a high-quality command line parser via a fluent interface.
