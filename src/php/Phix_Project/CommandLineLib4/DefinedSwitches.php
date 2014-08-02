@@ -311,7 +311,7 @@ class DefinedSwitches
                 foreach ($allSwitches as $switch)
                 {
                         // do we need to skip this switch?
-                        if (isset($options['actsAsCommand']) && !$options['actsAsCommand'] && $switch->testActsAsCommand())
+                        if (isset($options['actsAsCommand']) && ($switch->testActsAsCommand() != $options['actsAsCommand']))
                         {
                                 // skip this switch
                                 continue;
