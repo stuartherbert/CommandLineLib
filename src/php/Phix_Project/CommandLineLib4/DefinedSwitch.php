@@ -375,6 +375,21 @@ class DefinedSwitch
                 $this->longdesc = $desc;
                 return $this;
         }
+
+        /**
+         * Provide a longer description of this switch, to be shown during
+         * the output of extended help information
+         *
+         * An alias for $this->setLongDesc()
+         *
+         * @param string $desc
+         * @return DefinedSwitch $this
+         */
+        public function setLongDescription($desc)
+        {
+                return $this->setLongDesc($desc);
+        }
+
         /**
          * Obtain a list of the short switches that have been defined
          *
