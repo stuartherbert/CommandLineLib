@@ -70,12 +70,22 @@ class DefinedArg
         public $desc;
 
         /**
-         * The default value of this argument, used if this argument isn't
-         * found when the command-line is parsed
+         * The default value of this argument, used if:
+         *
+         * 1. the switch isn't found on the command-line, or
+         * 2. the switch is found with no argument and there is no
+         *    implicit value set
          *
          * @var string
          */
         public $defaultValue = null;
+
+        /**
+         * The value used if the switch is activated without an argument
+         *
+         * @var  string
+         */
+        public $implicitValue = null;
 
         /**
          * Is this argument mandatory?
@@ -207,6 +217,18 @@ class DefinedArg
         public function setDefaultValue($value)
         {
                 $this->defaultValue = $value;
+                return $this;
+        }
+
+        /**
+         * Remember the implicit value for this arg
+         *
+         * @param mixed $value
+         * @return DefinedArg $this
+         */
+        public function setImplicitValue($value)
+        {
+                $this->implicitValue = $value;
                 return $this;
         }
 }

@@ -294,10 +294,9 @@ class DefinedSwitch
         }
 
         /**
-         * Set the default value for the argument that this switch
-         * expects
-         *
-         * This only makes sense if the argument is optional
+         * Set the default value for the switch's argument.  This is used
+         * when the switch isn't found on the command-line, *or* when
+         * there's no implicit value provided
          *
          * @param string $value the default value for the argument
          * @return DefinedSwitch
@@ -313,6 +312,29 @@ class DefinedSwitch
 
                 $this->requireValidArg();
                 $this->arg->setDefaultValue($value);
+                return $this;
+        }
+
+        /**
+         * Set the default value for the switch's argument *if* the switch
+         * is used and the argument omitted
+         *
+         * This only makes sense if the argument is optional
+         *
+         * @param string $value the implicit value for the argument
+         * @return DefinedSwitch
+         */
+        public function setArgHasImplicitValueOf($value)
+        {
+                // catch programming errors
+                Contract::PreConditions(function() use ($value)
+                {
+                        Contract::RequiresValue($value, is_string($value), '$value must be a string');
+                        Contract::RequiresValue($value, strlen($value) > 0, '$value cannot be an empty string');
+                });
+
+                $this->requireValidArg();
+                $this->arg->setImplicitValue($value);
                 return $this;
         }
 
@@ -353,6 +375,21 @@ class DefinedSwitch
                 $this->longdesc = $desc;
                 return $this;
         }
+
+        /**
+         * Provide a longer description of this switch, to be shown during
+         * the output of extended help information
+         *
+         * An alias for $this->setLongDesc()
+         *
+         * @param string $desc
+         * @return DefinedSwitch $this
+         */
+        public function setLongDescription($desc)
+        {
+                return $this->setLongDesc($desc);
+        }
+
         /**
          * Obtain a list of the short switches that have been defined
          *

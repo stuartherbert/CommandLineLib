@@ -422,7 +422,17 @@ class CommandLineParser
                         }
                         else
                         {
-                                $arg = $switch->arg->defaultValue;
+                                // do we have an implicit value?
+                                //
+                                // an implicit value is the default value
+                                // of the switch if the switch is on the
+                                // command-line with no argument
+                                if ($switch->arg->implicitValue !== null) {
+                                        $arg = $switch->arg->implicitValue;
+                                }
+                                else {
+                                        $arg = $switch->arg->defaultValue;
+                                }
                                 $argsIndex--;
                         }
                 }
